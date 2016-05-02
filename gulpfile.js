@@ -11,6 +11,8 @@ var elixir = require('laravel-elixir');
  |
  */
 
+elixir.config.js.browserify.transformers[0].options.presets.push('stage-0');
+
 elixir(function(mix) {
     mix.browserify('index.js', 'public/assets/js/app.js');
 });
