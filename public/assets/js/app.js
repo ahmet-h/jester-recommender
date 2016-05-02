@@ -32983,7 +32983,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 },{"_process":346}],554:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -32991,7 +32991,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -33013,12 +33013,50 @@ var App = function (_Component) {
     }
 
     _createClass(App, [{
-        key: 'render',
+        key: "render",
         value: function render() {
             return _react2.default.createElement(
-                'h2',
-                { style: { color: 'green' } },
-                'Hi There!'
+                "div",
+                { className: "wrapper" },
+                _react2.default.createElement(
+                    "header",
+                    null,
+                    _react2.default.createElement(
+                        "div",
+                        { className: "container" },
+                        _react2.default.createElement(
+                            "span",
+                            null,
+                            "Header"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "main" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "container" },
+                        _react2.default.createElement(
+                            "span",
+                            { style: { color: 'green' } },
+                            "Hi There!"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "footer",
+                    null,
+                    _react2.default.createElement(
+                        "div",
+                        { className: "container" },
+                        _react2.default.createElement(
+                            "span",
+                            null,
+                            "Footer"
+                        )
+                    )
+                )
             );
         }
     }]);

@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="/assets/css/main.css">
     </head>
     <body>
-        <div id="app" class="container"></div>
+        <div id="app"></div>
         <script src="/assets/js/app.js"></script>
     </body>
 </html>
