@@ -9,6 +9,7 @@ body {
 
 a, a:hover, a:active, a:visited {
     color: #555;
+    outline: none;
     text-decoration: none;
 }
 
@@ -24,6 +25,7 @@ a:hover {
 header {
     background-color: #fff;
     border-bottom: 1px solid #ddd;
+    padding: 12px 0;
 }
 
 footer {
@@ -43,7 +45,7 @@ footer {
 }
 
 nav {
-    margin: 12px 0 8px;
+    margin: 12px 0 0;
 }
 
 ul {
