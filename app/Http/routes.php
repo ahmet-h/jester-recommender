@@ -13,4 +13,4 @@
 
 Route::get('{path}', function () {
     return view('index');
-})->where('path', '[0-9A-Za-z/-]*');
+})->where('path', '.*');
