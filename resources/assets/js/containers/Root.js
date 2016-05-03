@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router';
 import App from './App';
+import NotFound from '../components/NotFound';
 
 class Root extends Component {
 
@@ -19,6 +20,7 @@ class Root extends Component {
                     <Route path="/" component={App}>
                         
                     </Route>
+                    <Route path="*" component={NotFound} />
                 </Router>
             </Provider>
         )

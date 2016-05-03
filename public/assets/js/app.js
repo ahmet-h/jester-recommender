@@ -32983,6 +32983,75 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 },{"_process":346}],554:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NotFound = function (_Component) {
+    _inherits(NotFound, _Component);
+
+    function NotFound() {
+        _classCallCheck(this, NotFound);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(NotFound).apply(this, arguments));
+    }
+
+    _createClass(NotFound, [{
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'wrapper' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'container' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'not-found' },
+                        _react2.default.createElement(
+                            'div',
+                            { style: { marginBottom: '32px' } },
+                            _react2.default.createElement(
+                                'span',
+                                null,
+                                'Page Not Found :('
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/' },
+                            'Go to homepage'
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return NotFound;
+}(_react.Component);
+
+exports.default = NotFound;
+
+},{"react":538,"react-router":393}],555:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33025,9 +33094,67 @@ var App = function (_Component) {
                         "div",
                         { className: "container" },
                         _react2.default.createElement(
-                            "span",
+                            "div",
+                            { className: "title" },
+                            _react2.default.createElement(
+                                "span",
+                                null,
+                                "Jester Joke Recommender"
+                            )
+                        ),
+                        _react2.default.createElement(
+                            "nav",
                             null,
-                            "Header"
+                            _react2.default.createElement(
+                                "ul",
+                                null,
+                                _react2.default.createElement(
+                                    "li",
+                                    null,
+                                    _react2.default.createElement(
+                                        "a",
+                                        { href: "#" },
+                                        "Home"
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    "li",
+                                    null,
+                                    _react2.default.createElement(
+                                        "a",
+                                        { href: "#" },
+                                        "Random Joke"
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    "li",
+                                    null,
+                                    _react2.default.createElement(
+                                        "a",
+                                        { href: "#" },
+                                        "Top 10 Recommendations"
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                "div",
+                                { className: "user-nav" },
+                                _react2.default.createElement(
+                                    "span",
+                                    null,
+                                    "ahmeth@anadolu.edu.tr"
+                                ),
+                                _react2.default.createElement(
+                                    "span",
+                                    null,
+                                    _react2.default.createElement(
+                                        "a",
+                                        { href: "#" },
+                                        "Log Out"
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement("div", { className: "clear" })
                         )
                     )
                 ),
@@ -33066,7 +33193,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"react":538}],555:[function(require,module,exports){
+},{"react":538}],556:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33086,6 +33213,10 @@ var _reactRouter = require('react-router');
 var _App = require('./App');
 
 var _App2 = _interopRequireDefault(_App);
+
+var _NotFound = require('../components/NotFound');
+
+var _NotFound2 = _interopRequireDefault(_NotFound);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33118,7 +33249,8 @@ var Root = function (_Component) {
                 _react2.default.createElement(
                     _reactRouter.Router,
                     { history: history },
-                    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _App2.default })
+                    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _App2.default }),
+                    _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
                 )
             );
         }
@@ -33133,7 +33265,7 @@ Root.propTypes = {
 };
 exports.default = Root;
 
-},{"./App":554,"react":538,"react-redux":350,"react-router":393}],556:[function(require,module,exports){
+},{"../components/NotFound":554,"./App":555,"react":538,"react-redux":350,"react-router":393}],557:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -33164,6 +33296,6 @@ var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHi
 
 (0, _reactDom.render)(_react2.default.createElement(_Root2.default, { store: store, history: history }), document.getElementById('app'));
 
-},{"./containers/Root":555,"babel-polyfill":1,"react":538,"react-dom":347,"react-router":393,"react-router-redux":360,"redux":544}]},{},[556]);
+},{"./containers/Root":556,"babel-polyfill":1,"react":538,"react-dom":347,"react-router":393,"react-router-redux":360,"redux":544}]},{},[557]);
 
 //# sourceMappingURL=app.js.map

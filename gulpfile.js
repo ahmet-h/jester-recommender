@@ -11,6 +11,13 @@ var elixir = require('laravel-elixir');
  |
  */
 
+elixir.config.js.browserify.watchify = {
+    enabled: true,
+    options: {
+        poll: true
+    }
+};
+
 elixir.config.js.browserify.transformers[0].options.presets.push('stage-0');
 
 elixir(function(mix) {
