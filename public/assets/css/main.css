@@ -97,3 +97,7 @@ nav ul li {
 .not-found span {
     font-size: 24px;
 }
+
+.content {
+    padding: 18px;
+}

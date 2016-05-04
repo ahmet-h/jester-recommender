@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 class App extends Component {
     
     render() {
+        const { children } = this.props;
+
         return (
             <div className="wrapper">
                 <header>
@@ -13,7 +16,7 @@ class App extends Component {
                         <nav>
                             <ul>
                                 <li>
-                                    <a href="#">Home</a>
+                                    <Link to="/">Joke List</Link>
                                 </li>
                                 <li>
                                     <a href="#">Random Joke</a>
@@ -32,7 +35,9 @@ class App extends Component {
                 </header>
                 <div className="main">
                     <div className="container">
-                        <span style={{color: 'green'}}>Hi There!</span>
+                        <div className="content">
+                            {children}
+                        </div>
                     </div>
                 </div>
                 <footer>
