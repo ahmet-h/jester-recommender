@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute } from 'react-router';
 import App from './App';
+import HomePage from './HomePage';
 import JokeListPage from './JokeListPage';
 import NotFound from '../components/NotFound';
 
@@ -19,7 +20,8 @@ class Root extends Component {
             <Provider store={store}>
                 <Router history={history}>
                     <Route path="/" component={App}>
-                        <IndexRoute component={JokeListPage} />
+                        <IndexRoute component={HomePage} />
+                        <Route path="jokes" component={JokeListPage} />
                     </Route>
                     <Route path="*" component={NotFound} />
                 </Router>

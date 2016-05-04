@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { IndexLink, Link } from 'react-router';
 
 class App extends Component {
     
@@ -16,10 +16,10 @@ class App extends Component {
                         <nav>
                             <ul>
                                 <li>
-                                    <Link to="/">Joke List</Link>
+                                    <IndexLink to="/" activeClassName="active">Home</IndexLink>
                                 </li>
                                 <li>
-                                    <a href="#">Random Joke</a>
+                                    <Link to="jokes" activeClassName="active">Joke List</Link>
                                 </li>
                                 <li>
                                     <a href="#">Top 10 Recommendations</a>
@@ -35,14 +35,12 @@ class App extends Component {
                 </header>
                 <div className="main">
                     <div className="container">
-                        <div className="content">
-                            {children}
-                        </div>
+                        {children}
                     </div>
                 </div>
                 <footer>
                     <div className="container">
-                        <span>Footer</span>
+                        <span>Jester Joke Recommender</span>
                     </div>
                 </footer>
             </div>

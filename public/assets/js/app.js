@@ -33117,18 +33117,18 @@ var App = function (_Component) {
                                     'li',
                                     null,
                                     _react2.default.createElement(
-                                        _reactRouter.Link,
-                                        { to: '/' },
-                                        'Joke List'
+                                        _reactRouter.IndexLink,
+                                        { to: '/', activeClassName: 'active' },
+                                        'Home'
                                     )
                                 ),
                                 _react2.default.createElement(
                                     'li',
                                     null,
                                     _react2.default.createElement(
-                                        'a',
-                                        { href: '#' },
-                                        'Random Joke'
+                                        _reactRouter.Link,
+                                        { to: 'jokes', activeClassName: 'active' },
+                                        'Joke List'
                                     )
                                 ),
                                 _react2.default.createElement(
@@ -33169,11 +33169,7 @@ var App = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'container' },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'content' },
-                            children
-                        )
+                        children
                     )
                 ),
                 _react2.default.createElement(
@@ -33185,7 +33181,7 @@ var App = function (_Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Footer'
+                            'Jester Joke Recommender'
                         )
                     )
                 )
@@ -33199,7 +33195,7 @@ var App = function (_Component) {
 exports.default = App;
 
 },{"react":538,"react-router":393}],556:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -33207,7 +33203,57 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HomePage = function (_Component) {
+    _inherits(HomePage, _Component);
+
+    function HomePage() {
+        _classCallCheck(this, HomePage);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(HomePage).apply(this, arguments));
+    }
+
+    _createClass(HomePage, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "content" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "page-title" },
+                    "Home Page"
+                )
+            );
+        }
+    }]);
+
+    return HomePage;
+}(_react.Component);
+
+exports.default = HomePage;
+
+},{"react":538}],557:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -33229,12 +33275,16 @@ var JokeListPage = function (_Component) {
     }
 
     _createClass(JokeListPage, [{
-        key: 'render',
+        key: "render",
         value: function render() {
             return _react2.default.createElement(
-                'div',
-                null,
-                'Joke List Page'
+                "div",
+                { className: "content" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "page-title" },
+                    "All Jokes"
+                )
             );
         }
     }]);
@@ -33244,7 +33294,7 @@ var JokeListPage = function (_Component) {
 
 exports.default = JokeListPage;
 
-},{"react":538}],557:[function(require,module,exports){
+},{"react":538}],558:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33264,6 +33314,10 @@ var _reactRouter = require('react-router');
 var _App = require('./App');
 
 var _App2 = _interopRequireDefault(_App);
+
+var _HomePage = require('./HomePage');
+
+var _HomePage2 = _interopRequireDefault(_HomePage);
 
 var _JokeListPage = require('./JokeListPage');
 
@@ -33307,7 +33361,8 @@ var Root = function (_Component) {
                     _react2.default.createElement(
                         _reactRouter.Route,
                         { path: '/', component: _App2.default },
-                        _react2.default.createElement(_reactRouter.IndexRoute, { component: _JokeListPage2.default })
+                        _react2.default.createElement(_reactRouter.IndexRoute, { component: _HomePage2.default }),
+                        _react2.default.createElement(_reactRouter.Route, { path: 'jokes', component: _JokeListPage2.default })
                     ),
                     _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
                 )
@@ -33324,7 +33379,7 @@ Root.propTypes = {
 };
 exports.default = Root;
 
-},{"../components/NotFound":554,"./App":555,"./JokeListPage":556,"react":538,"react-redux":350,"react-router":393}],558:[function(require,module,exports){
+},{"../components/NotFound":554,"./App":555,"./HomePage":556,"./JokeListPage":557,"react":538,"react-redux":350,"react-router":393}],559:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -33355,6 +33410,6 @@ var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHi
 
 (0, _reactDom.render)(_react2.default.createElement(_Root2.default, { store: store, history: history }), document.getElementById('app'));
 
-},{"./containers/Root":557,"babel-polyfill":1,"react":538,"react-dom":347,"react-router":393,"react-router-redux":360,"redux":544}]},{},[558]);
+},{"./containers/Root":558,"babel-polyfill":1,"react":538,"react-dom":347,"react-router":393,"react-router-redux":360,"redux":544}]},{},[559]);
 
 //# sourceMappingURL=app.js.map

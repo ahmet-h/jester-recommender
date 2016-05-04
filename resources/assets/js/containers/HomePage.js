@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
-class JokeListPage extends Component {
+class HomePage extends Component {
 
     render() {
         return (
             <div className="content">
-                <div className="page-title">All Jokes</div>
+                <div className="page-title">Home Page</div>
             </div>
         );
     }
 
 }
 
-export default JokeListPage;
+export default HomePage;
