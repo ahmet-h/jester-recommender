@@ -46,15 +46,15 @@ class GenerateJokesTable extends Command
             DB::table('jokes')->truncate();
 
             $jokes = [];
-            $files = Storage::files('jokes');
-            $no = 1;
-            foreach($files as $file) {
-                $content = Storage::get($file);
+            for($i = 1; $i <= 100; $i++) {
+                $content = Storage::get('jokes/init' . $i . '.html');
                 $content = explode('<!--begin of joke -->', $content)[1];
                 $content = explode('<!--end of joke -->', $content)[0];
 
+                $content = preg_replace('/<(BR|P|p)>/', '<br>', $content);
+
                 $jokes[] = [
-                    'no' => $no++,
+                    'no' => $i,
                     'content' => $content,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
