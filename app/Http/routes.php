@@ -11,6 +11,10 @@
 |
 */
 
+Route::group(['prefix' => 'api'], function () {
+    Route::get('jokes', ['uses' => 'JokeController@index']);
+});
+
 Route::get('{path}', function () {
     return view('index');
 })->where('path', '.*');
