@@ -7,6 +7,7 @@ use Hash;
 use Illuminate\Console\Command;
 use Faker;
 use DB;
+use Illuminate\Support\Str;
 
 class GenerateUsersTable extends Command
 {
@@ -52,7 +53,7 @@ class GenerateUsersTable extends Command
             $password = 'secret';
             for($i = 1; $i <= 1000; $i++) {
                 $users[] = [
-                    'email' => $faker->unique()->email,
+                    'email' => Str::lower($faker->unique()->email),
                     'password' => $password,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()

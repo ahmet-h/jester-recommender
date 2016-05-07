@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
 
 class CreateRatingsTable extends Migration
 {
@@ -14,14 +13,15 @@ class CreateRatingsTable extends Migration
     public function up()
     {
         Schema::create('ratings', function (Blueprint $table) {
-            $table->increments('id');
-
             $table->integer('user_id')->unsigned();
             $table->integer('joke_id')->unsigned();
 
             $table->double('rating');
+            $table->double('rating_z');
 
             $table->timestamps();
+
+            $table->primary(['user_id', 'joke_id']);
 
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
