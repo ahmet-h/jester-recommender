@@ -4,13 +4,15 @@ import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
 import { browserHistory } from 'react-router';
-import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux';
-import { createStore, combineReducers } from 'redux';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './reducers';
+import thunkMiddleware from 'redux-thunk';
 
 const store = createStore(
-    combineReducers({
-        routing
-    })
+    rootReducer,
+    {},
+    applyMiddleware(thunkMiddleware)
 );
 
 const history = syncHistoryWithStore(browserHistory, store);

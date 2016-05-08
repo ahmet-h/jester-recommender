@@ -7,6 +7,11 @@ body {
     list-style: none;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    margin: 0 0 16px;
+}
+
 a, a:hover, a:active, a:visited {
     color: #555;
     outline: none;
@@ -127,6 +132,38 @@ nav ul li {
     padding: 18px;
 }
 
-.content .page-title {
+.content h2 {
     font-size: 20px;
+}
+
+.content article {
+    border-top: 1px solid #ddd;
+    padding-top: 18px;
+}
+
+.joke-list {
+    margin: 0 8px;
+}
+
+.joke-list li {
+    border-bottom: 1px solid #eee;
+}
+
+.joke-list li a {
+    display: block;
+    padding: 8px 0;
+}
+
+.joke-list li a span {
+    display: inline-block;
+    line-height: 24px;
+    height: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.joke-list li a span.joke-summary {
+    padding-left: 12px;
+    width: 560px;
+    text-overflow: ellipsis;
 }
