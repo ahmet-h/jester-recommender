@@ -33577,6 +33577,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _JokeRate = require('./JokeRate');
+
+var _JokeRate2 = _interopRequireDefault(_JokeRate);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33603,7 +33607,8 @@ var JokeDetail = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 { className: 'joke-detail' },
-                _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: joke.content } })
+                _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: joke.content } }),
+                _react2.default.createElement(_JokeRate2.default, null)
             );
         }
     }]);
@@ -33616,7 +33621,7 @@ JokeDetail.propTypes = {
 };
 exports.default = JokeDetail;
 
-},{"react":539,"react-router":394}],559:[function(require,module,exports){
+},{"./JokeRate":560,"react":539,"react-router":394}],559:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33707,6 +33712,66 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var JokeRate = function (_Component) {
+    _inherits(JokeRate, _Component);
+
+    function JokeRate() {
+        _classCallCheck(this, JokeRate);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(JokeRate).apply(this, arguments));
+    }
+
+    _createClass(JokeRate, [{
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'joke-rate' },
+                _react2.default.createElement(
+                    'div',
+                    { style: { marginBottom: '4px', textAlign: 'center' } },
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        'Your Rating: '
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        '-'
+                    )
+                ),
+                _react2.default.createElement('input', { type: 'range', min: '-10', max: '10', step: '0.1', defaultValue: '0' })
+            );
+        }
+    }]);
+
+    return JokeRate;
+}(_react.Component);
+
+exports.default = JokeRate;
+
+},{"react":539}],561:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -33763,7 +33828,7 @@ var NotFound = function (_Component) {
 
 exports.default = NotFound;
 
-},{"react":539,"react-router":394}],561:[function(require,module,exports){
+},{"react":539,"react-router":394}],562:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33906,7 +33971,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"react":539,"react-router":394}],562:[function(require,module,exports){
+},{"react":539,"react-router":394}],563:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33956,7 +34021,7 @@ var HomePage = function (_Component) {
 
 exports.default = HomePage;
 
-},{"react":539}],563:[function(require,module,exports){
+},{"react":539}],564:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34055,7 +34120,7 @@ function mapStateToProps(state) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(JokeListPage);
 
-},{"../actions":557,"../components/JokeList":559,"react":539,"react-redux":351}],564:[function(require,module,exports){
+},{"../actions":557,"../components/JokeList":559,"react":539,"react-redux":351}],565:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34106,6 +34171,7 @@ var JokePage = function (_Component) {
         key: 'render',
         value: function render() {
             var _props2 = this.props;
+            var id = _props2.id;
             var isFetching = _props2.isFetching;
             var joke = _props2.joke;
 
@@ -34116,7 +34182,8 @@ var JokePage = function (_Component) {
                 _react2.default.createElement(
                     'h2',
                     null,
-                    'Joke Detail'
+                    'Joke #',
+                    id
                 ),
                 _react2.default.createElement(
                     'article',
@@ -34157,7 +34224,7 @@ function mapStateToProps(state, ownProps) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(JokePage);
 
-},{"../actions":557,"../components/JokeDetail":558,"react":539,"react-redux":351}],565:[function(require,module,exports){
+},{"../actions":557,"../components/JokeDetail":558,"react":539,"react-redux":351}],566:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34247,7 +34314,7 @@ Root.propTypes = {
 };
 exports.default = Root;
 
-},{"../components/NotFound":560,"./App":561,"./HomePage":562,"./JokeListPage":563,"./JokePage":564,"react":539,"react-redux":351,"react-router":394}],566:[function(require,module,exports){
+},{"../components/NotFound":561,"./App":562,"./HomePage":563,"./JokeListPage":564,"./JokePage":565,"react":539,"react-redux":351,"react-router":394}],567:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -34284,7 +34351,7 @@ var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHi
 
 (0, _reactDom.render)(_react2.default.createElement(_Root2.default, { store: store, history: history }), document.getElementById('app'));
 
-},{"./containers/Root":565,"./reducers":567,"babel-polyfill":1,"react":539,"react-dom":348,"react-router":394,"react-router-redux":361,"redux":546,"redux-thunk":540}],567:[function(require,module,exports){
+},{"./containers/Root":566,"./reducers":568,"babel-polyfill":1,"react":539,"react-dom":348,"react-router":394,"react-router-redux":361,"redux":546,"redux-thunk":540}],568:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34349,6 +34416,6 @@ var rootReducer = (0, _redux.combineReducers)({
 
 exports.default = rootReducer;
 
-},{"./actions":557,"react-router-redux":361,"redux":546}]},{},[566]);
+},{"./actions":557,"react-router-redux":361,"redux":546}]},{},[567]);
 
 //# sourceMappingURL=app.js.map

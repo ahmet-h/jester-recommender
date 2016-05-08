@@ -156,7 +156,7 @@ nav ul li {
 
 .joke-list li a {
     display: block;
-    padding: 0;
+    padding: 4px 0;
 }
 
 .joke-list li a span {
@@ -164,6 +164,7 @@ nav ul li {
     line-height: 24px;
     height: 24px;
     overflow: hidden;
+    vertical-align: middle;
     white-space: nowrap;
 }
 
@@ -171,4 +172,13 @@ nav ul li {
     padding-left: 12px;
     width: 560px;
     text-overflow: ellipsis;
+}
+
+.joke-detail .joke-rate {
+    margin: 12px auto 0;
+    width: 240px;
+}
+
+.joke-detail .joke-rate input {
+    width: 100%;
 }

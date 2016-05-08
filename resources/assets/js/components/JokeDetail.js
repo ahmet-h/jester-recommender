@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import JokeRate from './JokeRate';
 
 class JokeDetail extends Component {
 
@@ -13,6 +14,7 @@ class JokeDetail extends Component {
         return (
             <div className="joke-detail">
                 <p dangerouslySetInnerHTML={{__html: joke.content}} />
+                <JokeRate />
             </div>
         );
     }

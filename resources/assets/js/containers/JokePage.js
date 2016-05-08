@@ -16,11 +16,11 @@ class JokePage extends Component {
     }
 
     render() {
-        const { isFetching, joke } = this.props;
+        const { id, isFetching, joke } = this.props;
 
         return (
             <div className="content">
-                <h2>Joke Detail</h2>
+                <h2>Joke #{id}</h2>
 
                 <article>
                     {isFetching &&

@@ -51,8 +51,8 @@ class GenerateJokesTable extends Command
                 $content = explode('<!--begin of joke -->', $content)[1];
                 $content = explode('<!--end of joke -->', $content)[0];
 
-                $content = preg_replace('/<(BR|P|p)>/', '<br>', $content);
-                $content = preg_replace('/\\n/', ' ', $content);
+//                $content = preg_replace('/<(BR|P|p)>/', '<br>', $content);
+//                $content = preg_replace('/\\n/', ' ', $content);
 
                 $content = trim($content);
 
