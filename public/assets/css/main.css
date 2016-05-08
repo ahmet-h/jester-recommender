@@ -138,7 +138,12 @@ nav ul li {
 
 .content article {
     border-top: 1px solid #ddd;
-    padding-top: 18px;
+    padding-top: 16px;
+}
+
+.content p {
+    margin: 0;
+    padding-bottom: 12px;
 }
 
 .joke-list {
@@ -151,7 +156,7 @@ nav ul li {
 
 .joke-list li a {
     display: block;
-    padding: 8px 0;
+    padding: 0;
 }
 
 .joke-list li a span {

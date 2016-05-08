@@ -33494,8 +33494,9 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
+exports.JOKE_FAILURE = exports.JOKE_SUCCESS = exports.JOKE_REQUEST = exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
 exports.fetchJokes = fetchJokes;
+exports.fetchJoke = fetchJoke;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
@@ -33506,6 +33507,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var JOKES_REQUEST = exports.JOKES_REQUEST = 'JOKES_REQUEST';
 var JOKES_SUCCESS = exports.JOKES_SUCCESS = 'JOKES_SUCCESS';
 var JOKES_FAILURE = exports.JOKES_FAILURE = 'JOKES_FAILURE';
+
+var JOKE_REQUEST = exports.JOKE_REQUEST = 'JOKE_REQUEST';
+var JOKE_SUCCESS = exports.JOKE_SUCCESS = 'JOKE_SUCCESS';
+var JOKE_FAILURE = exports.JOKE_FAILURE = 'JOKE_FAILURE';
 
 function requestJokes() {
     return {
@@ -33532,7 +33537,86 @@ function fetchJokes() {
     };
 }
 
+function requestJoke() {
+    return {
+        type: JOKE_REQUEST
+    };
+}
+
+function receiveJoke(joke) {
+    return {
+        type: JOKE_SUCCESS,
+        joke: joke
+    };
+}
+
+function fetchJoke(id) {
+    return function (dispatch) {
+        dispatch(requestJoke());
+
+        return (0, _isomorphicFetch2.default)('/api/joke/' + id).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(receiveJoke(json.joke));
+        });
+    };
+}
+
 },{"isomorphic-fetch":344}],558:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var JokeDetail = function (_Component) {
+    _inherits(JokeDetail, _Component);
+
+    function JokeDetail() {
+        _classCallCheck(this, JokeDetail);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(JokeDetail).apply(this, arguments));
+    }
+
+    _createClass(JokeDetail, [{
+        key: 'render',
+        value: function render() {
+            var joke = this.props.joke;
+
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'joke-detail' },
+                _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: joke.content } })
+            );
+        }
+    }]);
+
+    return JokeDetail;
+}(_react.Component);
+
+JokeDetail.propTypes = {
+    joke: _react.PropTypes.object.isRequired
+};
+exports.default = JokeDetail;
+
+},{"react":539,"react-router":394}],559:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33605,9 +33689,12 @@ var JokeList = function (_Component) {
     return JokeList;
 }(_react.Component);
 
+JokeList.propTypes = {
+    jokes: _react.PropTypes.array.isRequired
+};
 exports.default = JokeList;
 
-},{"react":539,"react-router":394}],559:[function(require,module,exports){
+},{"react":539,"react-router":394}],560:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33676,7 +33763,7 @@ var NotFound = function (_Component) {
 
 exports.default = NotFound;
 
-},{"react":539,"react-router":394}],560:[function(require,module,exports){
+},{"react":539,"react-router":394}],561:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33752,7 +33839,7 @@ var App = function (_Component) {
                                     null,
                                     _react2.default.createElement(
                                         _reactRouter.Link,
-                                        { to: 'jokes', activeClassName: 'active' },
+                                        { to: '/jokes', activeClassName: 'active' },
                                         'Joke List'
                                     )
                                 ),
@@ -33819,7 +33906,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"react":539,"react-router":394}],561:[function(require,module,exports){
+},{"react":539,"react-router":394}],562:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33869,7 +33956,7 @@ var HomePage = function (_Component) {
 
 exports.default = HomePage;
 
-},{"react":539}],562:[function(require,module,exports){
+},{"react":539}],563:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33968,7 +34055,109 @@ function mapStateToProps(state) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(JokeListPage);
 
-},{"../actions":557,"../components/JokeList":558,"react":539,"react-redux":351}],563:[function(require,module,exports){
+},{"../actions":557,"../components/JokeList":559,"react":539,"react-redux":351}],564:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _actions = require('../actions');
+
+var _JokeDetail = require('../components/JokeDetail');
+
+var _JokeDetail2 = _interopRequireDefault(_JokeDetail);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var JokePage = function (_Component) {
+    _inherits(JokePage, _Component);
+
+    function JokePage() {
+        _classCallCheck(this, JokePage);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(JokePage).apply(this, arguments));
+    }
+
+    _createClass(JokePage, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _props = this.props;
+            var dispatch = _props.dispatch;
+            var id = _props.id;
+
+            dispatch((0, _actions.fetchJoke)(id));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props2 = this.props;
+            var isFetching = _props2.isFetching;
+            var joke = _props2.joke;
+
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'content' },
+                _react2.default.createElement(
+                    'h2',
+                    null,
+                    'Joke Detail'
+                ),
+                _react2.default.createElement(
+                    'article',
+                    null,
+                    isFetching && _react2.default.createElement(
+                        'span',
+                        null,
+                        'Loading...'
+                    ),
+                    !isFetching && _react2.default.createElement(_JokeDetail2.default, { joke: joke })
+                )
+            );
+        }
+    }]);
+
+    return JokePage;
+}(_react.Component);
+
+JokePage.propTypes = {
+    isFetching: _react.PropTypes.bool.isRequired,
+    joke: _react.PropTypes.object.isRequired
+};
+
+
+function mapStateToProps(state, ownProps) {
+    var _ref = state.selectedJoke || { isFetching: true, joke: {} };
+
+    var isFetching = _ref.isFetching;
+    var joke = _ref.joke;
+
+
+    return {
+        id: ownProps.params.id,
+        isFetching: isFetching,
+        joke: joke
+    };
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(JokePage);
+
+},{"../actions":557,"../components/JokeDetail":558,"react":539,"react-redux":351}],565:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33996,6 +34185,10 @@ var _HomePage2 = _interopRequireDefault(_HomePage);
 var _JokeListPage = require('./JokeListPage');
 
 var _JokeListPage2 = _interopRequireDefault(_JokeListPage);
+
+var _JokePage = require('./JokePage');
+
+var _JokePage2 = _interopRequireDefault(_JokePage);
 
 var _NotFound = require('../components/NotFound');
 
@@ -34036,7 +34229,8 @@ var Root = function (_Component) {
                         _reactRouter.Route,
                         { path: '/', component: _App2.default },
                         _react2.default.createElement(_reactRouter.IndexRoute, { component: _HomePage2.default }),
-                        _react2.default.createElement(_reactRouter.Route, { path: 'jokes', component: _JokeListPage2.default })
+                        _react2.default.createElement(_reactRouter.Route, { path: 'jokes', component: _JokeListPage2.default }),
+                        _react2.default.createElement(_reactRouter.Route, { path: 'joke/:id', component: _JokePage2.default })
                     ),
                     _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
                 )
@@ -34053,7 +34247,7 @@ Root.propTypes = {
 };
 exports.default = Root;
 
-},{"../components/NotFound":559,"./App":560,"./HomePage":561,"./JokeListPage":562,"react":539,"react-redux":351,"react-router":394}],564:[function(require,module,exports){
+},{"../components/NotFound":560,"./App":561,"./HomePage":562,"./JokeListPage":563,"./JokePage":564,"react":539,"react-redux":351,"react-router":394}],566:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -34090,7 +34284,7 @@ var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHi
 
 (0, _reactDom.render)(_react2.default.createElement(_Root2.default, { store: store, history: history }), document.getElementById('app'));
 
-},{"./containers/Root":563,"./reducers":565,"babel-polyfill":1,"react":539,"react-dom":348,"react-router":394,"react-router-redux":361,"redux":546,"redux-thunk":540}],565:[function(require,module,exports){
+},{"./containers/Root":565,"./reducers":567,"babel-polyfill":1,"react":539,"react-dom":348,"react-router":394,"react-router-redux":361,"redux":546,"redux-thunk":540}],567:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34104,10 +34298,22 @@ var _reactRouterRedux = require('react-router-redux');
 var _actions = require('./actions');
 
 function selectedJoke() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? {
+        isFetching: false,
+        joke: {}
+    } : arguments[0];
     var action = arguments[1];
 
     switch (action.type) {
+        case _actions.JOKE_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case _actions.JOKE_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                joke: action.joke
+            });
         default:
             return state;
     }
@@ -34143,6 +34349,6 @@ var rootReducer = (0, _redux.combineReducers)({
 
 exports.default = rootReducer;
 
-},{"./actions":557,"react-router-redux":361,"redux":546}]},{},[564]);
+},{"./actions":557,"react-router-redux":361,"redux":546}]},{},[566]);
 
 //# sourceMappingURL=app.js.map

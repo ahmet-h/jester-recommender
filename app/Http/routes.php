@@ -13,6 +13,7 @@
 
 Route::group(['prefix' => 'api'], function () {
     Route::get('jokes', ['uses' => 'JokeController@index']);
+    Route::get('joke/{id}', ['uses' => 'JokeController@show'])->where('id', '[0-9]+');
 });
 
 Route::get('{path}', function () {

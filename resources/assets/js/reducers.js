@@ -2,11 +2,25 @@ import { combineReducers } from 'redux'
 import { routerReducer as routing } from 'react-router-redux';
 import {
     JOKES_REQUEST,
-    JOKES_SUCCESS
+    JOKES_SUCCESS,
+    JOKE_REQUEST,
+    JOKE_SUCCESS
 } from './actions';
 
-function selectedJoke(state = null, action) {
+function selectedJoke(state = {
+    isFetching: false,
+    joke: {}
+}, action) {
     switch (action.type) {
+        case JOKE_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case JOKE_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                joke: action.joke
+            });
         default:
             return state;
     }

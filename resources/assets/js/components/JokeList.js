@@ -1,7 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 class JokeList extends Component {
+
+    static propTypes = {
+        jokes: PropTypes.array.isRequired
+    };
 
     render() {
         const { jokes } = this.props;

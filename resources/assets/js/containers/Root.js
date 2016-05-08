@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute } from 'react-router';
 import App from './App';
 import HomePage from './HomePage';
 import JokeListPage from './JokeListPage';
+import JokePage from './JokePage';
 import NotFound from '../components/NotFound';
 
 class Root extends Component {
@@ -22,6 +23,7 @@ class Root extends Component {
                     <Route path="/" component={App}>
                         <IndexRoute component={HomePage} />
                         <Route path="jokes" component={JokeListPage} />
+                        <Route path="joke/:id" component={JokePage} />
                     </Route>
                     <Route path="*" component={NotFound} />
                 </Router>
