@@ -10,6 +10,10 @@ export const JOKE_FAILURE = 'JOKE_FAILURE';
 
 export const CHANGE_RATING = 'CHANGE_RATING';
 
+export const SUBMIT_RATING_REQUEST = 'SUBMIT_RATING_REQUEST';
+export const SUBMIT_RATING_SUCCESS = 'SUBMIT_RATING_SUCCESS';
+export const SUBMIT_RATING_FAILURE = 'SUBMIT_RATING_FAILURE';
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -61,4 +65,36 @@ export function changeRating(rating) {
         type: CHANGE_RATING,
         rating
     }
+}
+
+function requestRatingSubmit(rating) {
+    return {
+        type: SUBMIT_RATING_REQUEST,
+        rating
+    };
+}
+
+function receiveRatingSubmit() {
+    return {
+        type: SUBMIT_RATING_SUCCESS
+    };
+}
+
+export function submitRating(jokeId, rating) {
+    return dispatch => {
+        dispatch(requestRatingSubmit(rating));
+
+        return fetch(`/api/joke/${jokeId}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                rating
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(receiveRatingSubmit()));
+    };
 }

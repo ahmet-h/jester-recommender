@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchJoke, changeRating } from '../actions';
+import { fetchJoke, changeRating, submitRating } from '../actions';
 import JokeDetail from '../components/JokeDetail';
 
 class JokePage extends Component {
@@ -9,6 +9,7 @@ class JokePage extends Component {
         super(props);
 
         this.handleRateChange = this.handleRateChange.bind(this);
+        this.handleRateSubmit = this.handleRateSubmit.bind(this);
     }
 
     static propTypes = {
@@ -26,6 +27,10 @@ class JokePage extends Component {
         this.props.dispatch(changeRating(rating));
     }
 
+    handleRateSubmit(rating) {
+        this.props.dispatch(submitRating(this.props.id, rating));
+    }
+
     render() {
         const { id, isFetching, joke, picker } = this.props;
 
@@ -38,7 +43,8 @@ class JokePage extends Component {
                         <span>Loading...</span>
                     }
                     {!isFetching &&
-                        <JokeDetail joke={joke} onRateChange={this.handleRateChange} picker={picker} />
+                        <JokeDetail joke={joke} onRateChange={this.handleRateChange} picker={picker}
+                                    onRateSubmit={this.handleRateSubmit} />
                     }
                 </article>
             </div>

@@ -33668,10 +33668,11 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.CHANGE_RATING = exports.JOKE_FAILURE = exports.JOKE_SUCCESS = exports.JOKE_REQUEST = exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
+exports.SUBMIT_RATING_FAILURE = exports.SUBMIT_RATING_SUCCESS = exports.SUBMIT_RATING_REQUEST = exports.CHANGE_RATING = exports.JOKE_FAILURE = exports.JOKE_SUCCESS = exports.JOKE_REQUEST = exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
 exports.fetchJokes = fetchJokes;
 exports.fetchJoke = fetchJoke;
 exports.changeRating = changeRating;
+exports.submitRating = submitRating;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
@@ -33688,6 +33689,10 @@ var JOKE_SUCCESS = exports.JOKE_SUCCESS = 'JOKE_SUCCESS';
 var JOKE_FAILURE = exports.JOKE_FAILURE = 'JOKE_FAILURE';
 
 var CHANGE_RATING = exports.CHANGE_RATING = 'CHANGE_RATING';
+
+var SUBMIT_RATING_REQUEST = exports.SUBMIT_RATING_REQUEST = 'SUBMIT_RATING_REQUEST';
+var SUBMIT_RATING_SUCCESS = exports.SUBMIT_RATING_SUCCESS = 'SUBMIT_RATING_SUCCESS';
+var SUBMIT_RATING_FAILURE = exports.SUBMIT_RATING_FAILURE = 'SUBMIT_RATING_FAILURE';
 
 function requestJokes() {
     return {
@@ -33746,6 +33751,40 @@ function changeRating(rating) {
     };
 }
 
+function requestRatingSubmit(rating) {
+    return {
+        type: SUBMIT_RATING_REQUEST,
+        rating: rating
+    };
+}
+
+function receiveRatingSubmit() {
+    return {
+        type: SUBMIT_RATING_SUCCESS
+    };
+}
+
+function submitRating(jokeId, rating) {
+    return function (dispatch) {
+        dispatch(requestRatingSubmit(rating));
+
+        return (0, _isomorphicFetch2.default)('/api/joke/' + jokeId, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                rating: rating
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(receiveRatingSubmit());
+        });
+    };
+}
+
 },{"isomorphic-fetch":346}],559:[function(require,module,exports){
 'use strict';
 
@@ -33789,6 +33828,7 @@ var JokeDetail = function (_Component) {
             var joke = _props.joke;
             var onRateChange = _props.onRateChange;
             var picker = _props.picker;
+            var onRateSubmit = _props.onRateSubmit;
 
 
             var rated = joke.rating !== null;
@@ -33797,7 +33837,8 @@ var JokeDetail = function (_Component) {
                 'div',
                 { className: 'joke-detail' },
                 _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: joke.content } }),
-                _react2.default.createElement(_RatePicker2.default, { onChange: onRateChange, defaultValue: joke.rating, picker: picker, rated: rated })
+                _react2.default.createElement(_RatePicker2.default, { onChange: onRateChange, defaultValue: joke.rating, picker: picker, rated: rated,
+                    onSubmit: onRateSubmit })
             );
         }
     }]);
@@ -33808,7 +33849,8 @@ var JokeDetail = function (_Component) {
 JokeDetail.propTypes = {
     joke: _react.PropTypes.object.isRequired,
     onRateChange: _react.PropTypes.func.isRequired,
-    picker: _react.PropTypes.object.isRequired
+    picker: _react.PropTypes.object.isRequired,
+    onRateSubmit: _react.PropTypes.func.isRequired
 };
 exports.default = JokeDetail;
 
@@ -33996,7 +34038,10 @@ var RatePicker = function (_Component) {
             var _onChange = _props.onChange;
             var picker = _props.picker;
             var rated = _props.rated;
+            var onSubmit = _props.onSubmit;
 
+
+            var status = picker.isSaving ? 'Saving...' : picker.saved ? 'Saved!' : '';
 
             return _react2.default.createElement(
                 'div',
@@ -34013,12 +34058,12 @@ var RatePicker = function (_Component) {
                     _react2.default.createElement(
                         'span',
                         { style: { color: '#2c2', float: 'right' } },
-                        'Saved!'
+                        status
                     )
                 ),
-                _react2.default.createElement('input', { type: 'range', min: '-10', max: '10', step: '0.1', defaultValue: picker.value,
+                _react2.default.createElement('input', { type: 'range', min: '-10', max: '10', step: '0.1', defaultValue: picker.value, disabled: picker.isSaving,
                     onMouseUp: function onMouseUp(e) {
-                        console.log('Hi there!');
+                        return onSubmit(e.target.value);
                     },
                     onChange: function onChange(e) {
                         return _onChange(e.target.value);
@@ -34033,7 +34078,8 @@ var RatePicker = function (_Component) {
 RatePicker.propTypes = {
     onChange: _react.PropTypes.func.isRequired,
     rated: _react.PropTypes.bool.isRequired,
-    picker: _react.PropTypes.object.isRequired
+    picker: _react.PropTypes.object.isRequired,
+    onSubmit: _react.PropTypes.func.isRequired
 };
 exports.default = RatePicker;
 
@@ -34367,6 +34413,7 @@ var JokePage = function (_Component) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(JokePage).call(this, props));
 
         _this.handleRateChange = _this.handleRateChange.bind(_this);
+        _this.handleRateSubmit = _this.handleRateSubmit.bind(_this);
         return _this;
     }
 
@@ -34383,6 +34430,11 @@ var JokePage = function (_Component) {
         key: 'handleRateChange',
         value: function handleRateChange(rating) {
             this.props.dispatch((0, _actions.changeRating)(rating));
+        }
+    }, {
+        key: 'handleRateSubmit',
+        value: function handleRateSubmit(rating) {
+            this.props.dispatch((0, _actions.submitRating)(this.props.id, rating));
         }
     }, {
         key: 'render',
@@ -34411,7 +34463,8 @@ var JokePage = function (_Component) {
                         null,
                         'Loading...'
                     ),
-                    !isFetching && _react2.default.createElement(_JokeDetail2.default, { joke: joke, onRateChange: this.handleRateChange, picker: picker })
+                    !isFetching && _react2.default.createElement(_JokeDetail2.default, { joke: joke, onRateChange: this.handleRateChange, picker: picker,
+                        onRateSubmit: this.handleRateSubmit })
                 )
             );
         }
@@ -34588,7 +34641,7 @@ var _actions = require('./actions');
 function selectedJoke() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? {
         isFetching: false,
-        picker: { moved: false },
+        picker: { moved: false, isSaving: false, saved: false },
         joke: {}
     } : arguments[0];
     var action = arguments[1];
@@ -34601,7 +34654,11 @@ function selectedJoke() {
         case _actions.JOKE_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
-                picker: { moved: false, value: action.joke.rating ? action.joke.rating : 0 },
+                picker: Object.assign({}, state.picker, {
+                    moved: false,
+                    value: action.joke.rating ? action.joke.rating : 0,
+                    saved: false
+                }),
                 joke: action.joke
             });
         case _actions.CHANGE_RATING:
@@ -34609,6 +34666,19 @@ function selectedJoke() {
                 picker: Object.assign({}, state.picker, {
                     moved: true,
                     value: action.rating
+                })
+            });
+        case _actions.SUBMIT_RATING_REQUEST:
+            return Object.assign({}, state, {
+                picker: Object.assign({}, state.picker, {
+                    isSaving: true
+                })
+            });
+        case _actions.SUBMIT_RATING_SUCCESS:
+            return Object.assign({}, state, {
+                picker: Object.assign({}, state.picker, {
+                    isSaving: false,
+                    saved: true
                 })
             });
         default:

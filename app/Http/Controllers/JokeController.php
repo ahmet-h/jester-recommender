@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Exception;
+use Illuminate\Http\Request;
+use stdClass;
 
 class JokeController extends Controller
 {
@@ -52,6 +55,49 @@ class JokeController extends Controller
             ->first();
 
         return response(compact('joke'));
+    }
+
+    public function rate(Request $request, $id) {
+        $userId = 1001;
+
+        $ratingValue = $request->input('rating');
+
+        $rating = DB::table('ratings')
+            ->where('user_id', $userId)
+            ->where('joke_id', $id)
+            ->first();
+
+        try {
+            DB::beginTransaction();
+
+            if(isset($rating)) {
+                DB::table('ratings')
+                    ->where('user_id', $userId)
+                    ->where('joke_id', $id)
+                    ->update([
+                        'rating' => $ratingValue,
+                        'rating_z' => 0
+                    ]);
+            } else {
+                DB::table('ratings')
+                    ->insert([
+                        'user_id' => $userId,
+                        'joke_id' => $id,
+                        'rating' => $ratingValue,
+                        'rating_z' => 0
+                    ]);
+            }
+
+            // TODO: update user mean and variance
+
+            // TODO: update user zscores
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+
+        return response(json_encode(new stdClass()));
     }
 
 }
