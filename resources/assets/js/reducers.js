@@ -4,11 +4,13 @@ import {
     JOKES_REQUEST,
     JOKES_SUCCESS,
     JOKE_REQUEST,
-    JOKE_SUCCESS
+    JOKE_SUCCESS,
+    CHANGE_RATING
 } from './actions';
 
 function selectedJoke(state = {
     isFetching: false,
+    picker: {moved: false},
     joke: {}
 }, action) {
     switch (action.type) {
@@ -19,7 +21,15 @@ function selectedJoke(state = {
         case JOKE_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
+                picker: {moved: false, value: (action.joke.rating ? action.joke.rating : 0)},
                 joke: action.joke
+            });
+        case CHANGE_RATING:
+            return Object.assign({}, state, {
+                picker: Object.assign({}, state.picker, {
+                    moved: true,
+                    value: action.rating
+                })
             });
         default:
             return state;

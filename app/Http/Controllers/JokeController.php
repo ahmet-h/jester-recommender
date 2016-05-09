@@ -22,6 +22,7 @@ class JokeController extends Controller
                 DB::raw('substring(j.content, 1, 100) as content'),
                 'r.rating'
             ])
+            ->orderBy('j.no')
             ->get();
 
         for($i = 0; $i < count($jokes); $i++) {

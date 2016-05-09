@@ -8,6 +8,8 @@ export const JOKE_REQUEST = 'JOKE_REQUEST';
 export const JOKE_SUCCESS = 'JOKE_SUCCESS';
 export const JOKE_FAILURE = 'JOKE_FAILURE';
 
+export const CHANGE_RATING = 'CHANGE_RATING';
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -52,4 +54,11 @@ export function fetchJoke(id) {
             .then(response => response.json())
             .then(json => dispatch(receiveJoke(json.joke)));
     };
+}
+
+export function changeRating(rating) {
+    return {
+        type: CHANGE_RATING,
+        rating
+    }
 }
