@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -76,7 +77,8 @@ class JokeController extends Controller
                     ->where('joke_id', $id)
                     ->update([
                         'rating' => $ratingValue,
-                        'rating_z' => 0
+                        'rating_z' => 0,
+                        'updated_at' => Carbon::now()
                     ]);
             } else {
                 DB::table('ratings')
@@ -84,7 +86,9 @@ class JokeController extends Controller
                         'user_id' => $userId,
                         'joke_id' => $id,
                         'rating' => $ratingValue,
-                        'rating_z' => 0
+                        'rating_z' => 0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
                     ]);
             }
 
