@@ -118,12 +118,32 @@ class JokeController extends Controller
                     'sum_of_diff_squares' => $stat->getM2()
                 ]);
 
-            // TODO: update user zscores
+            // update user zscores
+            $userRatings = DB::table('ratings')
+                ->where('user_id', $userId)
+                ->select([
+                    'joke_id',
+                    'rating'
+                ])
+                ->get();
+
+            $userMean = $stat->getMean();
+            $userStdev = $stat->getStdDeviation();
+            foreach ($userRatings as $r) {
+                $zScore = $userStdev == 0 ? 0 : (($r->rating - $userMean) / $userStdev);
+                DB::table('ratings')
+                    ->where('user_id', $userId)
+                    ->where('joke_id', $r->joke_id)
+                    ->update([
+                        'rating_z' => $zScore,
+                        'updated_at' => Carbon::now()
+                    ]);
+            }
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return response(json_encode(['error' => $e->getMessage()]), 500);
+            return response(json_encode(['error' => $e]), 500);
         }
 
         return response(json_encode(['variance' => $stat->getVariance()]));

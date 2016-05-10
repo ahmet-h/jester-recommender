@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\OnlineStat;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -62,11 +63,11 @@ class GenerateRatingsTable extends Command
                 TRUE,
                 FALSE)[0];
 
+            $stat = new OnlineStat();
             $columnCount = count($rowData);
             for ($col = 0; $col < $columnCount; $col++) {
                 $cell = $rowData[$col];
                 if($col == 0) {
-                    $userData[] = $cell;
                     continue;
                 }
 
@@ -79,14 +80,32 @@ class GenerateRatingsTable extends Command
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ];
+
+                    $stat->push($cell);
                 }
             }
+
+            $userData[] = [
+                'num_ratings' => $stat->getN(),
+                'avg_rating' => $stat->getMean(),
+                'sum_of_diff_squares' => $stat->getM2(),
+                'stdev' => $stat->getStdDeviation()
+            ];
         }
 
         $this->info('Saving into database...');
 
         $total = count($ratingData);
         $count = ceil(floatval($total) / 1000);
+
+        for ($i = 0; $i < $total; $i++) {
+            $r = $ratingData[$i];
+            $u = $userData[$r['user_id'] - 1];
+
+            $zScore = ($r['rating'] - $u['avg_rating']) / $u['stdev'];
+
+            $ratingData[$i]['rating_z'] = $zScore;
+        }
 
         DB::transaction(function() use ($userData, $ratingData, $count) {
             DB::table('ratings')->truncate();
@@ -98,15 +117,13 @@ class GenerateRatingsTable extends Command
             }
 
             for ($i = 0; $i < count($userData); $i++) {
+                unset($userData[$i]['stdev']);
+                
                 DB::table('users')
                     ->where('id', $i + 1)
-                    ->update([
-                        'num_ratings' => $userData[$i]
-                    ]);
+                    ->update($userData[$i]);
             }
         });
-        
-        // TODO: calculate user averages and zscores
 
         $this->info('Saved into database.');
 
