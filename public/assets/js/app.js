@@ -33896,29 +33896,76 @@ var JokeList = function (_Component) {
                 'div',
                 { className: 'joke-list' },
                 _react2.default.createElement(
-                    'ul',
+                    'table',
                     null,
-                    jokes.map(function (joke, i) {
-                        return _react2.default.createElement(
-                            'li',
-                            { key: i },
+                    _react2.default.createElement(
+                        'thead',
+                        null,
+                        _react2.default.createElement(
+                            'tr',
+                            null,
                             _react2.default.createElement(
-                                _reactRouter.Link,
-                                { to: '/joke/' + joke.id },
+                                'th',
+                                null,
+                                '#'
+                            ),
+                            _react2.default.createElement(
+                                'th',
+                                null,
+                                'Joke Text'
+                            ),
+                            _react2.default.createElement(
+                                'th',
+                                null,
+                                'Your Rating'
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'tbody',
+                        null,
+                        jokes.map(function (joke, i) {
+                            return _react2.default.createElement(
+                                'tr',
+                                { key: i },
                                 _react2.default.createElement(
-                                    'span',
+                                    'td',
                                     null,
-                                    'Joke #',
-                                    joke.no
+                                    _react2.default.createElement(
+                                        _reactRouter.Link,
+                                        { to: '/joke/' + joke.id },
+                                        _react2.default.createElement(
+                                            'span',
+                                            null,
+                                            joke.no
+                                        )
+                                    )
                                 ),
                                 _react2.default.createElement(
-                                    'span',
-                                    { className: 'joke-summary' },
-                                    joke.content
+                                    'td',
+                                    null,
+                                    _react2.default.createElement(
+                                        _reactRouter.Link,
+                                        { to: '/joke/' + joke.id },
+                                        _react2.default.createElement(
+                                            'span',
+                                            { className: 'joke-summary' },
+                                            joke.content
+                                        )
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'td',
+                                    { style: { textAlign: 'center' } },
+                                    _react2.default.createElement(
+                                        'span',
+                                        null,
+                                        joke.rating ? joke.rating : '-'
+                                    )
                                 )
-                            )
-                        );
-                    })
+                            );
+                        })
+                    )
                 )
             );
         }

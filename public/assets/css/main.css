@@ -150,16 +150,11 @@ nav ul li {
     margin: 0 8px;
 }
 
-.joke-list li {
+.joke-list td {
     border-bottom: 1px solid #eee;
 }
 
-.joke-list li a {
-    display: block;
-    padding: 4px 0;
-}
-
-.joke-list li a span {
+.joke-list td span {
     display: inline-block;
     line-height: 24px;
     height: 24px;
@@ -168,10 +163,14 @@ nav ul li {
     white-space: nowrap;
 }
 
-.joke-list li a span.joke-summary {
+.joke-list td span.joke-summary {
     padding-left: 12px;
-    width: 560px;
+    width: 580px;
     text-overflow: ellipsis;
+}
+
+.joke-list table {
+    width: 100%;
 }
 
 .joke-detail .joke-rate {

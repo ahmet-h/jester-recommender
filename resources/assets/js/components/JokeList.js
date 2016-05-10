@@ -12,16 +12,40 @@ class JokeList extends Component {
         
         return (
             <div className="joke-list">
-                <ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                Joke Text
+                            </th>
+                            <th>
+                                Your Rating
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {jokes.map((joke, i) =>
-                        <li key={i}>
-                            <Link to={`/joke/${joke.id}`}>
-                                <span>Joke #{joke.no}</span>
-                                <span className="joke-summary">{joke.content}</span>
-                            </Link>
-                        </li>
+                        <tr key={i}>
+                            <td>
+                                <Link to={`/joke/${joke.id}`}>
+                                    <span>{joke.no}</span>
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/joke/${joke.id}`}>
+                                    <span className="joke-summary">{joke.content}</span>
+                                </Link>
+                            </td>
+                            <td style={{textAlign: 'center'}}>
+                                <span>{joke.rating ? joke.rating : '-'}</span>
+                            </td>
+                        </tr>
                     )}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         );
     }
