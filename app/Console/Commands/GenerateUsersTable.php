@@ -51,7 +51,7 @@ class GenerateUsersTable extends Command
 
             $users = [];
             $password = 'secret';
-            for($i = 1; $i <= 1000; $i++) {
+            for($i = 1; $i <= 500; $i++) {
                 $users[] = [
                     'email' => Str::lower($faker->unique()->email),
                     'password' => $password,

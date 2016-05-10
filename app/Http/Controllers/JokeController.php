@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\OnlineStat;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -12,7 +13,7 @@ class JokeController extends Controller
 {
 
     public function index() {
-        $userId = 1001;
+        $userId = 501;
 
         $jokes = DB::table('jokes as j')
             ->leftJoinWhere('users as u', 'u.id', '=', $userId)
@@ -38,7 +39,7 @@ class JokeController extends Controller
     }
 
     public function show($id) {
-        $userId = 1001;
+        $userId = 501;
 
         $joke = DB::table('jokes as j')
             ->leftJoinWhere('users as u', 'u.id', '=', $userId)
@@ -59,7 +60,7 @@ class JokeController extends Controller
     }
 
     public function rate(Request $request, $id) {
-        $userId = 1001;
+        $userId = 501;
 
         $ratingValue = $request->input('rating');
 
@@ -71,6 +72,17 @@ class JokeController extends Controller
         try {
             DB::beginTransaction();
 
+            $user = DB::table('users')
+                ->where('id', $userId)
+                ->select([
+                    'num_ratings',
+                    'avg_rating',
+                    'sum_of_diff_squares'
+                ])
+                ->first();
+
+            $stat = new OnlineStat($user->num_ratings, $user->avg_rating, $user->sum_of_diff_squares);
+
             if(isset($rating)) {
                 DB::table('ratings')
                     ->where('user_id', $userId)
@@ -80,6 +92,9 @@ class JokeController extends Controller
                         'rating_z' => 0,
                         'updated_at' => Carbon::now()
                     ]);
+
+                $stat->pop($rating->rating);
+                $stat->push($ratingValue);
             } else {
                 DB::table('ratings')
                     ->insert([
@@ -90,18 +105,28 @@ class JokeController extends Controller
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);
+
+                $stat->push($ratingValue);
             }
 
-            // TODO: update user mean and variance
+            // update user mean and variance
+            DB::table('users')
+                ->where('id', $userId)
+                ->update([
+                    'num_ratings' => $stat->getN(),
+                    'avg_rating' => $stat->getMean(),
+                    'sum_of_diff_squares' => $stat->getM2()
+                ]);
 
             // TODO: update user zscores
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+            return response(json_encode(['error' => $e->getMessage()]), 500);
         }
 
-        return response(json_encode(new stdClass()));
+        return response(json_encode(['variance' => $stat->getVariance()]));
     }
 
 }

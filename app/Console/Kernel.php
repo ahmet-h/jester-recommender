@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
          Commands\GenerateUsersTable::class,
          Commands\GenerateJokesTable::class,
+         Commands\GenerateRatingsTable::class,
     ];
 
     /**
