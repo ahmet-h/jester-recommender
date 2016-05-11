@@ -79,6 +79,31 @@ class Prediction
         return ($sum2 != 0) ? ($this->activeUserMean + $this->activeUserStdev * ($sum1 / $sum2)) : 0;
     }
 
+    public function topN($n = 10) {
+        $ratedJokeIds = array_column(DB::table('ratings')
+            ->where('user_id', '=', $this->activeUserId)
+            ->select([
+                'joke_id',
+            ])
+            ->get(), 'joke_id');
+
+        $notRatedJokes = DB::table('jokes')
+            ->whereNotIn('id', $ratedJokeIds)
+            ->select([
+                'id'
+            ])
+            ->get();
+
+        $predictions = [];
+        foreach ($notRatedJokes as $joke) {
+            $predictions[$joke->id] = $this->predict($joke->id);
+        }
+
+        arsort($predictions);
+
+        return array_slice($predictions, 0, $n, true);
+    }
+
     private function calculateSimilarities() {
         $userIds = array_column(DB::table('users')
             ->where('id', '!=', $this->activeUserId)

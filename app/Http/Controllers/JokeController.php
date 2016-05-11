@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
-use stdClass;
 
 class JokeController extends Controller
 {

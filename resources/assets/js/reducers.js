@@ -3,13 +3,20 @@ import { routerReducer as routing } from 'react-router-redux';
 import {
     JOKES_REQUEST,
     JOKES_SUCCESS,
+
     JOKE_REQUEST,
     JOKE_SUCCESS,
+
     CHANGE_RATING,
+
     SUBMIT_RATING_REQUEST,
     SUBMIT_RATING_SUCCESS,
+
     PREDICTION_REQUEST,
     PREDICTION_SUCCESS,
+
+    TOP_N_REQUEST,
+    TOP_N_SUCCESS
 } from './actions';
 
 function selectedJoke(state = {
@@ -95,9 +102,29 @@ function jokes(state = {
     }
 }
 
+function topN(state = {
+    isFetching: false,
+    items: []
+}, action) {
+    switch (action.type) {
+        case TOP_N_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case TOP_N_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                items: action.jokes
+            });
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers({
     selectedJoke,
     jokes,
+    topN,
     routing
 });
 

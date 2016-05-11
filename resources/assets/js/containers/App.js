@@ -22,7 +22,7 @@ class App extends Component {
                                     <Link to="/jokes" activeClassName="active">Joke List</Link>
                                 </li>
                                 <li>
-                                    <a href="#">Top 10 Recommendations</a>
+                                    <Link to="/top-n" activeClassName="active">Top 10 Recommendations</Link>
                                 </li>
                             </ul>
                             <div className="user-nav">

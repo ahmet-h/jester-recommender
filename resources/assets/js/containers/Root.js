@@ -5,6 +5,7 @@ import App from './App';
 import HomePage from './HomePage';
 import JokeListPage from './JokeListPage';
 import JokePage from './JokePage';
+import TopNPage from './TopNPage';
 import NotFound from '../components/NotFound';
 
 class Root extends Component {
@@ -24,6 +25,7 @@ class Root extends Component {
                         <IndexRoute component={HomePage} />
                         <Route path="jokes" component={JokeListPage} />
                         <Route path="joke/:id" component={JokePage} />
+                        <Route path="top-n" component={TopNPage} />
                     </Route>
                     <Route path="*" component={NotFound} />
                 </Router>

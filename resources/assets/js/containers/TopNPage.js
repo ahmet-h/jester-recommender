@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchJokes } from '../actions';
 import JokeList from '../components/JokeList';
+import { fetchTopN } from '../actions';
 
-class JokeListPage extends Component {
+class TopNPage extends Component {
 
     static propTypes = {
         isFetching: PropTypes.bool.isRequired,
@@ -12,22 +12,22 @@ class JokeListPage extends Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(fetchJokes());
+        dispatch(fetchTopN());
     }
 
     render() {
         const { isFetching, jokes } = this.props;
-        
+
         return (
             <div className="content">
-                <h2>List of All Jokes</h2>
+                <h2>Top 10 Joke Recommendations</h2>
 
                 <article>
                     {isFetching &&
                         <span>Loading...</span>
                     }
                     {!isFetching &&
-                        <JokeList jokes={jokes} />
+                        <JokeList jokes={jokes} showRatings={false} />
                     }
                 </article>
             </div>
@@ -37,7 +37,7 @@ class JokeListPage extends Component {
 }
 
 function mapStateToProps(state) {
-    const {isFetching, items} = state.jokes || {isFetching: true, items: []};
+    const {isFetching, items} = state.topN || {isFetching: true, items: []};
 
     return {
         isFetching,
@@ -45,4 +45,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(JokeListPage);
+export default connect(mapStateToProps)(TopNPage);

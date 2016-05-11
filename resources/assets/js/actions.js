@@ -18,6 +18,10 @@ export const PREDICTION_REQUEST = 'PREDICTION_REQUEST';
 export const PREDICTION_SUCCESS = 'PREDICTION_SUCCESS';
 export const PREDICTION_FAILURE = 'PREDICTION_FAILURE';
 
+export const TOP_N_REQUEST = 'TOP_N_REQUEST';
+export const TOP_N_SUCCESS = 'TOP_N_SUCCESS';
+export const TOP_N_FAILURE = 'TOP_N_FAILURE';
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -127,5 +131,30 @@ export function fetchPrediction(jokeId) {
         })
         .then(response => response.json())
         .then(json => dispatch(receivePrediction(json.prediction)));
+    };
+}
+
+function requestTopN() {
+    return {
+        type: TOP_N_REQUEST
+    };
+}
+
+function receiveTopN(jokes) {
+    return {
+        type: TOP_N_SUCCESS,
+        jokes
+    };
+}
+
+export function fetchTopN() {
+    return dispatch => {
+        dispatch(requestTopN());
+
+        return fetch('/api/top-n', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(json => dispatch(receiveTopN(json.jokes)));
     };
 }
