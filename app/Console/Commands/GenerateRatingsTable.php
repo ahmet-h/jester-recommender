@@ -59,9 +59,9 @@ class GenerateRatingsTable extends Command
         $this->info('Reading data...');
         for ($row = 1; $row <= $highestRow; $row++) {
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
-                NULL,
-                TRUE,
-                FALSE)[0];
+                null,
+                true,
+                false)[0];
 
             $stat = new OnlineStat();
             $columnCount = count($rowData);

@@ -64,13 +64,13 @@ class JokeController extends Controller
 
         $ratingValue = $request->input('rating');
 
-        $rating = DB::table('ratings')
-            ->where('user_id', $userId)
-            ->where('joke_id', $id)
-            ->first();
-
         try {
             DB::beginTransaction();
+            
+            $rating = DB::table('ratings')
+                ->where('user_id', $userId)
+                ->where('joke_id', $id)
+                ->first();
 
             $user = DB::table('users')
                 ->where('id', $userId)

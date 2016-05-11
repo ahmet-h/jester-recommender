@@ -22,6 +22,7 @@ class RatePicker extends Component {
                 </div>
                 <input type="range" min="-10" max="10" step="0.1" defaultValue={picker.value} disabled={picker.isSaving}
                        onMouseUp={e => onSubmit(e.target.value)}
+                       onKeyUp={e => {if([37, 38, 39, 40].indexOf(e.keyCode) != -1) onSubmit(e.target.value)}}
                        onChange={e => onChange(e.target.value)} />
             </div>
         );
