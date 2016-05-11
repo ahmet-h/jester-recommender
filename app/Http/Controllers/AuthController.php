@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Exception;
 use Firebase\JWT\JWT;
 use Hash;
 use Illuminate\Http\Request;
@@ -37,7 +38,18 @@ class AuthController extends Controller
         } else {
             return response(['message' => 'User not found.'], 403);
         }
+    }
 
+    public function verify(Request $request) {
+        $token = $request->input('token');
+
+        try {
+            $payload = JWT::decode($token, 'secret');
+
+            return response([['token' => $token, 'user' => $payload]]);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage()], 403);
+        }
     }
 
 }

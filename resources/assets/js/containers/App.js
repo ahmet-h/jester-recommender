@@ -11,14 +11,8 @@ class App extends Component {
         user: PropTypes.object.isRequired
     };
 
-    componentDidMount() {
-        const { dispatch } = this.props;
-
-        let token = localStorage.getItem('token') || null;
-
-        if(!token) {
-            dispatch(push('/login'));
-        }
+    componentWillMount() {
+        this.checkAuth();
     }
 
     componentWillReceiveProps(nextProps) {

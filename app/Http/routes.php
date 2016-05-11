@@ -12,13 +12,15 @@
 */
 
 Route::group(['prefix' => 'api'], function () {
-    Route::get('jokes', ['uses' => 'JokeController@index']);
+    Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::get('jokes', ['uses' => 'JokeController@index']);
 
-    Route::get('joke/{id}', ['uses' => 'JokeController@show'])->where('id', '[0-9]+');
-    Route::post('joke/{id}', ['uses' => 'JokeController@rate'])->where('id', '[0-9]+');
+        Route::get('joke/{id}', ['uses' => 'JokeController@show'])->where('id', '[0-9]+');
+        Route::post('joke/{id}', ['uses' => 'JokeController@rate'])->where('id', '[0-9]+');
 
-    Route::post('predict/{id}', ['uses' => 'PredictionController@predict'])->where('id', '[0-9]+');
-    Route::post('top-n', ['uses' => 'PredictionController@topN']);
+        Route::post('predict/{id}', ['uses' => 'PredictionController@predict'])->where('id', '[0-9]+');
+        Route::post('top-n', ['uses' => 'PredictionController@topN']);
+    });
 
     Route::post('auth/create', ['uses' => 'AuthController@create']);
 });

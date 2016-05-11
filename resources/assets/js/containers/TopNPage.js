@@ -16,18 +16,21 @@ class TopNPage extends Component {
     }
 
     render() {
-        const { isFetching, jokes } = this.props;
+        const { isFetching, jokes, message } = this.props;
 
         return (
             <div className="content">
                 <h2>Top 10 Joke Recommendations</h2>
 
                 <article>
-                    {isFetching &&
+                    {isFetching && !message &&
                         <span>Loading...</span>
                     }
-                    {!isFetching &&
+                    {!isFetching && !message &&
                         <JokeList jokes={jokes} showRatings={false} />
+                    }
+                    {message &&
+                        <span style={{color: 'red'}}>{message}</span>
                     }
                 </article>
             </div>
@@ -37,11 +40,12 @@ class TopNPage extends Component {
 }
 
 function mapStateToProps(state) {
-    const {isFetching, items} = state.topN || {isFetching: true, items: []};
+    const {isFetching, items, message} = state.topN || {isFetching: true, items: [], message: ''};
 
     return {
         isFetching,
-        jokes: items
+        jokes: items,
+        message
     };
 }
 

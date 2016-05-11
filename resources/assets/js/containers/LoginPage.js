@@ -17,16 +17,6 @@ class LoginPage extends Component {
         user: PropTypes.object
     };
 
-    componentDidMount() {
-        const { dispatch } = this.props;
-
-        let token = localStorage.getItem('token') || null;
-
-        if(token) {
-            dispatch(push('/'));
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         const { dispatch, isAuthenticated } = nextProps;
 

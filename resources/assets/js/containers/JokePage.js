@@ -61,7 +61,8 @@ class JokePage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    const {isFetching, joke, picker, prediction} = state.selectedJoke || {isFetching: true, joke: {}, picker: {}, prediction: {}};
+    const {isFetching, joke, picker, prediction} = state.selectedJoke || {isFetching: true, joke: {},
+        picker: {}, prediction: {}};
 
     return {
         id: ownProps.params.id,

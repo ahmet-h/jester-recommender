@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 class JokeController extends Controller
 {
 
-    public function index() {
-        $userId = 501;
+    public function index(Request $request) {
+        $userId = $request->get('user')->id;
 
         $jokes = DB::table('jokes as j')
             ->leftJoinWhere('users as u', 'u.id', '=', $userId)
@@ -37,8 +37,8 @@ class JokeController extends Controller
         return response(compact('jokes'));
     }
 
-    public function show($id) {
-        $userId = 501;
+    public function show(Request $request, $id) {
+        $userId = $request->get('user')->id;
 
         $joke = DB::table('jokes as j')
             ->leftJoinWhere('users as u', 'u.id', '=', $userId)
@@ -59,7 +59,7 @@ class JokeController extends Controller
     }
 
     public function rate(Request $request, $id) {
-        $userId = 501;
+        $userId = $request->get('user')->id;
 
         $ratingValue = $request->input('rating');
 
@@ -142,7 +142,7 @@ class JokeController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return response(json_encode(['error' => $e]), 500);
+            return response(['message' => $e->getMessage()], 500);
         }
 
         return response(['rating' => $ratingValue]);

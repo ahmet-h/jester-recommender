@@ -26,6 +26,16 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
+function getHeaders() {
+    let token = localStorage.getItem('token') || null;
+
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -39,13 +49,30 @@ function receiveJokes(jokes) {
     };
 }
 
+function failJokes(message) {
+    return {
+        type: JOKES_FAILURE,
+        message
+    };
+}
+
 export function fetchJokes() {
     return dispatch => {
         dispatch(requestJokes());
 
-        return fetch('/api/jokes')
-            .then(response => response.json())
-            .then(json => dispatch(receiveJokes(json.jokes)));
+        return fetch('/api/jokes', {
+            method: 'GET',
+            headers: getHeaders()
+        })
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failJokes(json.message));
+                return Promise.reject(json.message);
+            } else {
+                dispatch(receiveJokes(json.jokes));
+            }
+        }).catch(err => console.log(err));
     };
 }
 
@@ -62,13 +89,30 @@ function receiveJoke(joke) {
     };
 }
 
+function failJoke(message) {
+    return {
+        type: JOKE_FAILURE,
+        message
+    };
+}
+
 export function fetchJoke(id) {
     return dispatch => {
         dispatch(requestJoke());
 
-        return fetch(`/api/joke/${id}`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveJoke(json.joke)));
+        return fetch(`/api/joke/${id}`, {
+            method: 'GET',
+            headers: getHeaders()
+        })
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failJoke(json.message));
+                return Promise.reject(json.message);
+            } else {
+                dispatch(receiveJoke(json.joke));
+            }
+        }).catch(err => console.log(err));
     };
 }
 
@@ -93,22 +137,33 @@ function receiveRatingSubmit(rating) {
     };
 }
 
+function failRatingSubmit(message) {
+    return {
+        type: SUBMIT_RATING_FAILURE,
+        message
+    };
+}
+
 export function submitRating(jokeId, rating) {
     return dispatch => {
         dispatch(requestRatingSubmit(rating));
 
         return fetch(`/api/joke/${jokeId}`, {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+            headers: getHeaders(),
             body: JSON.stringify({
                 rating
             })
         })
-        .then(response => response.json())
-        .then(json => dispatch(receiveRatingSubmit(json.rating)));
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failRatingSubmit(json.message));
+                return Promise.reject(json.message);
+            } else {
+                dispatch(receiveRatingSubmit(json.rating));
+            }
+        }).catch(err => console.log(err));
     };
 }
 
@@ -126,15 +181,30 @@ function receivePrediction(prediction) {
     };
 }
 
+function failPrediction(message) {
+    return {
+        type: PREDICTION_FAILURE,
+        message
+    };
+}
+
 export function fetchPrediction(jokeId) {
     return dispatch => {
         dispatch(requestPrediction(jokeId));
 
         return fetch(`/api/predict/${jokeId}`, {
-            method: 'POST'
+            method: 'POST',
+            headers: getHeaders()
         })
-        .then(response => response.json())
-        .then(json => dispatch(receivePrediction(json.prediction)));
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failPrediction(json.message));
+                return Promise.reject(json.message);
+            } else {
+                dispatch(receivePrediction(json.prediction));
+            }
+        }).catch(err => console.log(err));
     };
 }
 
@@ -151,15 +221,30 @@ function receiveTopN(jokes) {
     };
 }
 
+function failTopN(message) {
+    return {
+        type: TOP_N_FAILURE,
+        message
+    };
+}
+
 export function fetchTopN() {
     return dispatch => {
         dispatch(requestTopN());
 
         return fetch('/api/top-n', {
-            method: 'POST'
+            method: 'POST',
+            headers: getHeaders()
         })
-        .then(response => response.json())
-        .then(json => dispatch(receiveTopN(json.jokes)));
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failTopN(json.message));
+                return Promise.reject(json.message);
+            } else {
+                dispatch(receiveTopN(json.jokes));
+            }
+        }).catch(err => console.log(err));
     };
 }
 

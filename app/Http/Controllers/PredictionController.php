@@ -4,20 +4,43 @@ namespace App\Http\Controllers;
 
 use App\Support\Prediction;
 use DB;
+use Illuminate\Http\Request;
 
 class PredictionController extends Controller
 {
 
-    public function predict($jokeId) {
-        $userId = 501;
+    public function predict(Request $request, $jokeId) {
+        $userId = $request->get('user')->id;
+
+        $numRatings = DB::table('users')
+            ->where('id', $userId)
+            ->select([
+                'num_ratings'
+            ])
+            ->first()->num_ratings;
+
+        if($numRatings < 10) {
+            return response(['message' => 'You need to have at least 10 jokes rated to get a prediction.'], 400);
+        }
 
         $prediction = new Prediction($userId);
 
-        return ['prediction' => $prediction->predict($jokeId)];
+        return response(['prediction' => $prediction->predict($jokeId)]);
     }
 
-    public function topN() {
-        $userId = 501;
+    public function topN(Request $request) {
+        $userId = $request->get('user')->id;
+
+        $numRatings = DB::table('users')
+            ->where('id', $userId)
+            ->select([
+                'num_ratings'
+            ])
+            ->first()->num_ratings;
+
+        if($numRatings < 10) {
+            return response(['message' => 'You need to have at least 10 jokes rated to get a prediction.'], 400);
+        }
 
         $prediction = new Prediction($userId);
 

@@ -3,20 +3,25 @@ import { routerReducer as routing } from 'react-router-redux';
 import {
     JOKES_REQUEST,
     JOKES_SUCCESS,
+    JOKES_FAILURE,
 
     JOKE_REQUEST,
     JOKE_SUCCESS,
+    JOKE_FAILURE,
 
     CHANGE_RATING,
 
     SUBMIT_RATING_REQUEST,
     SUBMIT_RATING_SUCCESS,
+    SUBMIT_RATING_FAILURE,
 
     PREDICTION_REQUEST,
     PREDICTION_SUCCESS,
+    PREDICTION_FAILURE,
 
     TOP_N_REQUEST,
     TOP_N_SUCCESS,
+    TOP_N_FAILURE,
 
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -72,7 +77,8 @@ function selectedJoke(state = {
         case PREDICTION_REQUEST:
             return Object.assign({}, state, {
                 prediction: Object.assign({}, state.prediction, {
-                    isFetching: true
+                    isFetching: true,
+                    message: null
                 })
             });
         case PREDICTION_SUCCESS:
@@ -80,6 +86,13 @@ function selectedJoke(state = {
                 prediction: Object.assign({}, state.prediction, {
                     isFetching: false,
                     value: action.prediction.toFixed(2)
+                })
+            });
+        case PREDICTION_FAILURE:
+            return Object.assign({}, state, {
+                prediction: Object.assign({}, state.prediction, {
+                    isFetching: false,
+                    message: action.message
                 })
             });
         default:
@@ -113,12 +126,18 @@ function topN(state = {
     switch (action.type) {
         case TOP_N_REQUEST:
             return Object.assign({}, state, {
-                isFetching: true
+                isFetching: true,
+                message: null
             });
         case TOP_N_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 items: action.jokes
+            });
+        case TOP_N_FAILURE:
+            return Object.assign({}, state, {
+                isFetching: false,
+                message: action.message
             });
         default:
             return state;

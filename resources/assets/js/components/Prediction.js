@@ -10,20 +10,23 @@ class Prediction extends Component {
     render() {
         const { prediction, onSubmit } = this.props;
 
-        const { isFetching, value } = prediction;
+        const { isFetching, value, message } = prediction;
 
         const predicted = value !== null;
 
         return (
             <div className="joke-predict">
-                {(!isFetching && !predicted) &&
+                {(!isFetching && !predicted && !message) &&
                     <button className="submit-btn" onClick={e => onSubmit()}>Get Prediction</button>
                 }
-                {isFetching &&
+                {isFetching && !message &&
                     <span>Calculating...</span>
                 }
-                {predicted &&
+                {predicted && !message &&
                     <span>Predicted rating: {value}</span>
+                }
+                {message &&
+                    <span style={{color: 'red'}}>{message}</span>
                 }
             </div>
         );
