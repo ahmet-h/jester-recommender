@@ -14,6 +14,10 @@ export const SUBMIT_RATING_REQUEST = 'SUBMIT_RATING_REQUEST';
 export const SUBMIT_RATING_SUCCESS = 'SUBMIT_RATING_SUCCESS';
 export const SUBMIT_RATING_FAILURE = 'SUBMIT_RATING_FAILURE';
 
+export const PREDICTION_REQUEST = 'PREDICTION_REQUEST';
+export const PREDICTION_SUCCESS = 'PREDICTION_SUCCESS';
+export const PREDICTION_FAILURE = 'PREDICTION_FAILURE';
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -74,9 +78,10 @@ function requestRatingSubmit(rating) {
     };
 }
 
-function receiveRatingSubmit() {
+function receiveRatingSubmit(rating) {
     return {
-        type: SUBMIT_RATING_SUCCESS
+        type: SUBMIT_RATING_SUCCESS,
+        rating
     };
 }
 
@@ -95,6 +100,32 @@ export function submitRating(jokeId, rating) {
             })
         })
         .then(response => response.json())
-        .then(json => dispatch(receiveRatingSubmit()));
+        .then(json => dispatch(receiveRatingSubmit(json.rating)));
+    };
+}
+
+function requestPrediction(jokeId) {
+    return {
+        type: PREDICTION_REQUEST,
+        jokeId
+    };
+}
+
+function receivePrediction(prediction) {
+    return {
+        type: PREDICTION_SUCCESS,
+        prediction
+    };
+}
+
+export function fetchPrediction(jokeId) {
+    return dispatch => {
+        dispatch(requestPrediction(jokeId));
+
+        return fetch(`/api/predict/${jokeId}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(json => dispatch(receivePrediction(json.prediction)));
     };
 }

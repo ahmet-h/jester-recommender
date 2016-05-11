@@ -7,13 +7,16 @@ import {
     JOKE_SUCCESS,
     CHANGE_RATING,
     SUBMIT_RATING_REQUEST,
-    SUBMIT_RATING_SUCCESS
+    SUBMIT_RATING_SUCCESS,
+    PREDICTION_REQUEST,
+    PREDICTION_SUCCESS,
 } from './actions';
 
 function selectedJoke(state = {
     isFetching: false,
     picker: {moved: false, isSaving: false, saved: false},
-    joke: {}
+    joke: {},
+    prediction: {isFetching: false, value: null}
 }, action) {
     switch (action.type) {
         case JOKE_REQUEST:
@@ -28,7 +31,8 @@ function selectedJoke(state = {
                     value: (action.joke.rating ? action.joke.rating : 0),
                     saved: false
                 }),
-                joke: action.joke
+                joke: action.joke,
+                prediction: {isFetching: false, value: null}
             });
         case CHANGE_RATING:
             return Object.assign({}, state, {
@@ -47,7 +51,24 @@ function selectedJoke(state = {
             return Object.assign({}, state, {
                 picker: Object.assign({}, state.picker, {
                     isSaving: false,
+                    value: action.rating,
                     saved: true
+                }),
+                joke: Object.assign({}, state.joke, {
+                    rating: action.rating
+                })
+            });
+        case PREDICTION_REQUEST:
+            return Object.assign({}, state, {
+                prediction: Object.assign({}, state.prediction, {
+                    isFetching: true
+                })
+            });
+        case PREDICTION_SUCCESS:
+            return Object.assign({}, state, {
+                prediction: Object.assign({}, state.prediction, {
+                    isFetching: false,
+                    value: action.prediction.toFixed(2)
                 })
             });
         default:

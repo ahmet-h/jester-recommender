@@ -17,7 +17,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('joke/{id}', ['uses' => 'JokeController@show'])->where('id', '[0-9]+');
     Route::post('joke/{id}', ['uses' => 'JokeController@rate'])->where('id', '[0-9]+');
 
-    Route::get('predict/{id}', ['uses' => 'PredictionController@predict'])->where('id', '[0-9]+');
+    Route::post('predict/{id}', ['uses' => 'PredictionController@predict'])->where('id', '[0-9]+');
 });
 
 Route::get('{path}', function () {

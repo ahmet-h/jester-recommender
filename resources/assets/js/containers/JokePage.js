@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchJoke, changeRating, submitRating } from '../actions';
+import { fetchJoke, changeRating, submitRating, fetchPrediction } from '../actions';
 import JokeDetail from '../components/JokeDetail';
 
 class JokePage extends Component {
@@ -10,12 +10,14 @@ class JokePage extends Component {
 
         this.handleRateChange = this.handleRateChange.bind(this);
         this.handleRateSubmit = this.handleRateSubmit.bind(this);
+        this.handlePredictionSubmit = this.handlePredictionSubmit.bind(this);
     }
 
     static propTypes = {
         isFetching: PropTypes.bool.isRequired,
         joke: PropTypes.object.isRequired,
-        picker: PropTypes.object.isRequired
+        picker: PropTypes.object.isRequired,
+        prediction: PropTypes.object.isRequired
     };
 
     componentDidMount() {
@@ -31,8 +33,12 @@ class JokePage extends Component {
         this.props.dispatch(submitRating(this.props.id, rating));
     }
 
+    handlePredictionSubmit() {
+        this.props.dispatch(fetchPrediction(this.props.id));
+    }
+
     render() {
-        const { id, isFetching, joke, picker } = this.props;
+        const { id, isFetching, joke, picker, prediction } = this.props;
 
         return (
             <div className="content">
@@ -44,7 +50,8 @@ class JokePage extends Component {
                     }
                     {!isFetching &&
                         <JokeDetail joke={joke} onRateChange={this.handleRateChange} picker={picker}
-                                    onRateSubmit={this.handleRateSubmit} />
+                                    onRateSubmit={this.handleRateSubmit} prediction={prediction}
+                                    onPredictionSubmit={this.handlePredictionSubmit} />
                     }
                 </article>
             </div>
@@ -54,13 +61,14 @@ class JokePage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    const {isFetching, joke, picker} = state.selectedJoke || {isFetching: true, joke: {}, picker: {}};
+    const {isFetching, joke, picker, prediction} = state.selectedJoke || {isFetching: true, joke: {}, picker: {}, prediction: {}};
 
     return {
         id: ownProps.params.id,
         isFetching,
         joke,
-        picker
+        picker,
+        prediction
     };
 }
 
