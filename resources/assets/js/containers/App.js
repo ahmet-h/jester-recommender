@@ -1,10 +1,40 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { IndexLink, Link } from 'react-router';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 class App extends Component {
-    
+
+    static propTypes = {
+        isFetching: PropTypes.bool.isRequired,
+        isAuthenticated: PropTypes.bool.isRequired,
+        user: PropTypes.object.isRequired
+    };
+
+    componentDidMount() {
+        const { dispatch } = this.props;
+
+        let token = localStorage.getItem('token') || null;
+
+        if(!token) {
+            dispatch(push('/login'));
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.checkAuth();
+    }
+
+    checkAuth() {
+        const { dispatch, isAuthenticated } = this.props;
+
+        if(!isAuthenticated) {
+            dispatch(push('/login'));
+        }
+    }
+
     render() {
-        const { children } = this.props;
+        const { user, children } = this.props;
 
         return (
             <div className="wrapper">
@@ -26,7 +56,7 @@ class App extends Component {
                                 </li>
                             </ul>
                             <div className="user-nav">
-                                <span>ahmeth@anadolu.edu.tr</span>
+                                <span>{user.email}</span>
                                 <span><a href="#">Log Out</a></span>
                             </div>
                             <div className="clear"></div>
@@ -49,4 +79,14 @@ class App extends Component {
     
 }
 
-export default App;
+function mapStateToProps(state) {
+    const {isFetching, isAuthenticated, user} = state.auth || {isFetching: false, isAuthenticated: false, user: {}};
+
+    return {
+        isFetching,
+        isAuthenticated,
+        user
+    };
+}
+
+export default connect(mapStateToProps)(App);

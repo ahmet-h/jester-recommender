@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
 import { browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
 import thunkMiddleware from 'redux-thunk';
@@ -12,7 +12,7 @@ import thunkMiddleware from 'redux-thunk';
 const store = createStore(
     rootReducer,
     {},
-    applyMiddleware(thunkMiddleware)
+    applyMiddleware(thunkMiddleware, routerMiddleware(browserHistory))
 );
 
 const history = syncHistoryWithStore(browserHistory, store);

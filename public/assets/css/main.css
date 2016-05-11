@@ -212,7 +212,7 @@ nav ul li {
     display:inline-block;
     cursor:pointer;
     color:#ffffff;
-    font-size:15px;
+    font-size:14px;
     font-weight:bold;
     padding:6px 24px;
     text-decoration:none;
@@ -232,4 +232,32 @@ nav ul li {
 .submit-btn:active {
     position:relative;
     top:1px;
+}
+
+.login-container {
+    margin: 60px auto 0;
+    width: 280px;
+}
+
+.login-container div {
+    margin-bottom: 12px;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.login-container input {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555555;
+    vertical-align: middle;
+    background: #ffffff none;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }

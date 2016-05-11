@@ -33668,13 +33668,14 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.TOP_N_FAILURE = exports.TOP_N_SUCCESS = exports.TOP_N_REQUEST = exports.PREDICTION_FAILURE = exports.PREDICTION_SUCCESS = exports.PREDICTION_REQUEST = exports.SUBMIT_RATING_FAILURE = exports.SUBMIT_RATING_SUCCESS = exports.SUBMIT_RATING_REQUEST = exports.CHANGE_RATING = exports.JOKE_FAILURE = exports.JOKE_SUCCESS = exports.JOKE_REQUEST = exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
+exports.LOGIN_FAILURE = exports.LOGIN_SUCCESS = exports.LOGIN_REQUEST = exports.TOP_N_FAILURE = exports.TOP_N_SUCCESS = exports.TOP_N_REQUEST = exports.PREDICTION_FAILURE = exports.PREDICTION_SUCCESS = exports.PREDICTION_REQUEST = exports.SUBMIT_RATING_FAILURE = exports.SUBMIT_RATING_SUCCESS = exports.SUBMIT_RATING_REQUEST = exports.CHANGE_RATING = exports.JOKE_FAILURE = exports.JOKE_SUCCESS = exports.JOKE_REQUEST = exports.JOKES_FAILURE = exports.JOKES_SUCCESS = exports.JOKES_REQUEST = undefined;
 exports.fetchJokes = fetchJokes;
 exports.fetchJoke = fetchJoke;
 exports.changeRating = changeRating;
 exports.submitRating = submitRating;
 exports.fetchPrediction = fetchPrediction;
 exports.fetchTopN = fetchTopN;
+exports.loginUser = loginUser;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
@@ -33703,6 +33704,10 @@ var PREDICTION_FAILURE = exports.PREDICTION_FAILURE = 'PREDICTION_FAILURE';
 var TOP_N_REQUEST = exports.TOP_N_REQUEST = 'TOP_N_REQUEST';
 var TOP_N_SUCCESS = exports.TOP_N_SUCCESS = 'TOP_N_SUCCESS';
 var TOP_N_FAILURE = exports.TOP_N_FAILURE = 'TOP_N_FAILURE';
+
+var LOGIN_REQUEST = exports.LOGIN_REQUEST = 'LOGIN_REQUEST';
+var LOGIN_SUCCESS = exports.LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+var LOGIN_FAILURE = exports.LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 function requestJokes() {
     return {
@@ -33847,6 +33852,60 @@ function fetchTopN() {
             return response.json();
         }).then(function (json) {
             return dispatch(receiveTopN(json.jokes));
+        });
+    };
+}
+
+function requestLogin(creds) {
+    return {
+        type: LOGIN_REQUEST,
+        creds: creds
+    };
+}
+
+function receiveLogin(token, user) {
+    return {
+        type: LOGIN_SUCCESS,
+        token: token,
+        user: user
+    };
+}
+
+function failLogin(message) {
+    return {
+        type: LOGIN_FAILURE,
+        message: message
+    };
+}
+
+function loginUser(creds) {
+    return function (dispatch) {
+        dispatch(requestLogin(creds));
+
+        return (0, _isomorphicFetch2.default)('/api/auth/create', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(creds)
+        }).then(function (response) {
+            return response.json().then(function (json) {
+                return { json: json, response: response };
+            });
+        }).then(function (_ref) {
+            var json = _ref.json;
+            var response = _ref.response;
+
+            if (!response.ok) {
+                dispatch(failLogin(json.message));
+                return Promise.reject(json.message);
+            } else {
+                localStorage.setItem('token', json.token);
+                dispatch(receiveLogin(json.token, json.user));
+            }
+        }).catch(function (err) {
+            return console.log(err);
         });
     };
 }
@@ -34307,6 +34366,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _reactRedux = require('react-redux');
+
+var _reactRouterRedux = require('react-router-redux');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34325,9 +34388,40 @@ var App = function (_Component) {
     }
 
     _createClass(App, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var dispatch = this.props.dispatch;
+
+
+            var token = localStorage.getItem('token') || null;
+
+            if (!token) {
+                dispatch((0, _reactRouterRedux.push)('/login'));
+            }
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            this.checkAuth();
+        }
+    }, {
+        key: 'checkAuth',
+        value: function checkAuth() {
+            var _props = this.props;
+            var dispatch = _props.dispatch;
+            var isAuthenticated = _props.isAuthenticated;
+
+
+            if (!isAuthenticated) {
+                dispatch((0, _reactRouterRedux.push)('/login'));
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
-            var children = this.props.children;
+            var _props2 = this.props;
+            var user = _props2.user;
+            var children = _props2.children;
 
 
             return _react2.default.createElement(
@@ -34388,7 +34482,7 @@ var App = function (_Component) {
                                 _react2.default.createElement(
                                     'span',
                                     null,
-                                    'ahmeth@anadolu.edu.tr'
+                                    user.email
                                 ),
                                 _react2.default.createElement(
                                     'span',
@@ -34433,9 +34527,31 @@ var App = function (_Component) {
     return App;
 }(_react.Component);
 
-exports.default = App;
+App.propTypes = {
+    isFetching: _react.PropTypes.bool.isRequired,
+    isAuthenticated: _react.PropTypes.bool.isRequired,
+    user: _react.PropTypes.object.isRequired
+};
 
-},{"react":540,"react-router":395}],565:[function(require,module,exports){
+
+function mapStateToProps(state) {
+    var _ref = state.auth || { isFetching: false, isAuthenticated: false, user: {} };
+
+    var isFetching = _ref.isFetching;
+    var isAuthenticated = _ref.isAuthenticated;
+    var user = _ref.user;
+
+
+    return {
+        isFetching: isFetching,
+        isAuthenticated: isAuthenticated,
+        user: user
+    };
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
+
+},{"react":540,"react-redux":352,"react-router":395,"react-router-redux":362}],565:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34734,6 +34850,185 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = require('react-redux');
 
+var _actions = require('../actions');
+
+var _reactRouterRedux = require('react-router-redux');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LoginPage = function (_Component) {
+    _inherits(LoginPage, _Component);
+
+    function LoginPage(props) {
+        _classCallCheck(this, LoginPage);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginPage).call(this, props));
+
+        _this.handleLoginSubmit = _this.handleLoginSubmit.bind(_this);
+        return _this;
+    }
+
+    _createClass(LoginPage, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var dispatch = this.props.dispatch;
+
+
+            var token = localStorage.getItem('token') || null;
+
+            if (token) {
+                dispatch((0, _reactRouterRedux.push)('/'));
+            }
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            var dispatch = nextProps.dispatch;
+            var isAuthenticated = nextProps.isAuthenticated;
+
+
+            if (isAuthenticated) {
+                dispatch((0, _reactRouterRedux.push)('/'));
+            }
+        }
+    }, {
+        key: 'handleLoginSubmit',
+        value: function handleLoginSubmit(e) {
+            e.preventDefault();
+
+            var dispatch = this.props.dispatch;
+
+
+            var email = this.refs.email.value.trim();
+            var password = this.refs.password.value.trim();
+
+            var creds = {
+                email: email,
+                password: password
+            };
+
+            dispatch((0, _actions.loginUser)(creds));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var isFetching = _props.isFetching;
+            var isAuthenticated = _props.isAuthenticated;
+            var user = _props.user;
+            var message = _props.message;
+
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'wrapper' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'login-container' },
+                    _react2.default.createElement(
+                        'form',
+                        { onSubmit: this.handleLoginSubmit },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h3',
+                                null,
+                                'Jester Joke Recommender'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'label',
+                                null,
+                                'E-mail:'
+                            ),
+                            _react2.default.createElement('input', { ref: 'email', type: 'text', placeholder: 'E-mail' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'label',
+                                null,
+                                'Password:'
+                            ),
+                            _react2.default.createElement('input', { ref: 'password', type: 'password', placeholder: 'Password' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            message && _react2.default.createElement(
+                                'span',
+                                { style: { color: 'red' } },
+                                message
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                { type: 'submit', className: '', style: { float: 'right' },
+                                    disabled: isFetching },
+                                'Login'
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return LoginPage;
+}(_react.Component);
+
+LoginPage.propTypes = {
+    isFetching: _react.PropTypes.bool.isRequired,
+    isAuthenticated: _react.PropTypes.bool.isRequired,
+    user: _react.PropTypes.object
+};
+
+
+function mapStateToProps(state) {
+    var _ref = state.auth || { isFetching: false, isAuthenticated: false,
+        user: {}, message: '' };
+
+    var isFetching = _ref.isFetching;
+    var isAuthenticated = _ref.isAuthenticated;
+    var user = _ref.user;
+    var message = _ref.message;
+
+
+    return {
+        isFetching: isFetching,
+        isAuthenticated: isAuthenticated,
+        user: user,
+        message: message
+    };
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(LoginPage);
+
+},{"../actions":558,"react":540,"react-redux":352,"react-router-redux":362}],569:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
 var _reactRouter = require('react-router');
 
 var _App = require('./App');
@@ -34755,6 +35050,10 @@ var _JokePage2 = _interopRequireDefault(_JokePage);
 var _TopNPage = require('./TopNPage');
 
 var _TopNPage2 = _interopRequireDefault(_TopNPage);
+
+var _LoginPage = require('./LoginPage');
+
+var _LoginPage2 = _interopRequireDefault(_LoginPage);
 
 var _NotFound = require('../components/NotFound');
 
@@ -34799,6 +35098,7 @@ var Root = function (_Component) {
                         _react2.default.createElement(_reactRouter.Route, { path: 'joke/:id', component: _JokePage2.default }),
                         _react2.default.createElement(_reactRouter.Route, { path: 'top-n', component: _TopNPage2.default })
                     ),
+                    _react2.default.createElement(_reactRouter.Route, { path: 'login', component: _LoginPage2.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
                 )
             );
@@ -34814,7 +35114,7 @@ Root.propTypes = {
 };
 exports.default = Root;
 
-},{"../components/NotFound":561,"./App":564,"./HomePage":565,"./JokeListPage":566,"./JokePage":567,"./TopNPage":569,"react":540,"react-redux":352,"react-router":395}],569:[function(require,module,exports){
+},{"../components/NotFound":561,"./App":564,"./HomePage":565,"./JokeListPage":566,"./JokePage":567,"./LoginPage":568,"./TopNPage":570,"react":540,"react-redux":352,"react-router":395}],570:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34913,7 +35213,7 @@ function mapStateToProps(state) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(TopNPage);
 
-},{"../actions":558,"../components/JokeList":560,"react":540,"react-redux":352}],570:[function(require,module,exports){
+},{"../actions":558,"../components/JokeList":560,"react":540,"react-redux":352}],571:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -34944,13 +35244,13 @@ var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_reducers2.default, {}, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+var store = (0, _redux.createStore)(_reducers2.default, {}, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reactRouterRedux.routerMiddleware)(_reactRouter.browserHistory)));
 
 var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHistory, store);
 
 (0, _reactDom.render)(_react2.default.createElement(_Root2.default, { store: store, history: history }), document.getElementById('app'));
 
-},{"./containers/Root":568,"./reducers":571,"babel-polyfill":1,"react":540,"react-dom":349,"react-router":395,"react-router-redux":362,"redux":547,"redux-thunk":541}],571:[function(require,module,exports){
+},{"./containers/Root":569,"./reducers":572,"babel-polyfill":1,"react":540,"react-dom":349,"react-router":395,"react-router-redux":362,"redux":547,"redux-thunk":541}],572:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35074,15 +35374,47 @@ function topN() {
     }
 }
 
+function auth() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? {
+        isFetching: false,
+        isAuthenticated: false,
+        user: {}
+    } : arguments[0];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _actions.LOGIN_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true,
+                isAuthenticated: false
+            });
+        case _actions.LOGIN_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                isAuthenticated: true,
+                user: action.user
+            });
+        case _actions.LOGIN_FAILURE:
+            return Object.assign({}, state, {
+                isFetching: false,
+                isAuthenticated: false,
+                message: action.message
+            });
+        default:
+            return state;
+    }
+}
+
 var rootReducer = (0, _redux.combineReducers)({
     selectedJoke: selectedJoke,
     jokes: jokes,
     topN: topN,
+    auth: auth,
     routing: _reactRouterRedux.routerReducer
 });
 
 exports.default = rootReducer;
 
-},{"./actions":558,"react-router-redux":362,"redux":547}]},{},[570]);
+},{"./actions":558,"react-router-redux":362,"redux":547}]},{},[571]);
 
 //# sourceMappingURL=app.js.map

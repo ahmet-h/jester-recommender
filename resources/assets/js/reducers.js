@@ -16,7 +16,11 @@ import {
     PREDICTION_SUCCESS,
 
     TOP_N_REQUEST,
-    TOP_N_SUCCESS
+    TOP_N_SUCCESS,
+
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGIN_FAILURE,
 } from './actions';
 
 function selectedJoke(state = {
@@ -121,10 +125,39 @@ function topN(state = {
     }
 }
 
+function auth(state = {
+    isFetching: false,
+    isAuthenticated: false,
+    user: {}
+}, action) {
+    switch (action.type) {
+        case LOGIN_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true,
+                isAuthenticated: false
+            });
+        case LOGIN_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                isAuthenticated: true,
+                user: action.user
+            });
+        case LOGIN_FAILURE:
+            return Object.assign({}, state, {
+                isFetching: false,
+                isAuthenticated: false,
+                message: action.message
+            });
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers({
     selectedJoke,
     jokes,
     topN,
+    auth,
     routing
 });
 

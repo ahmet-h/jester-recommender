@@ -19,6 +19,8 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('predict/{id}', ['uses' => 'PredictionController@predict'])->where('id', '[0-9]+');
     Route::post('top-n', ['uses' => 'PredictionController@topN']);
+
+    Route::post('auth/create', ['uses' => 'AuthController@create']);
 });
 
 Route::get('{path}', function () {

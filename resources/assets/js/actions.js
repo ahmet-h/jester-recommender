@@ -22,6 +22,10 @@ export const TOP_N_REQUEST = 'TOP_N_REQUEST';
 export const TOP_N_SUCCESS = 'TOP_N_SUCCESS';
 export const TOP_N_FAILURE = 'TOP_N_FAILURE';
 
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
 function requestJokes() {
     return {
         type: JOKES_REQUEST
@@ -156,5 +160,52 @@ export function fetchTopN() {
         })
         .then(response => response.json())
         .then(json => dispatch(receiveTopN(json.jokes)));
+    };
+}
+
+function requestLogin(creds) {
+    return {
+        type: LOGIN_REQUEST,
+        creds
+    };
+}
+
+function receiveLogin(token, user) {
+    return {
+        type: LOGIN_SUCCESS,
+        token,
+        user
+    };
+}
+
+function failLogin(message) {
+    return {
+        type: LOGIN_FAILURE,
+        message
+    };
+}
+
+export function loginUser(creds) {
+    return dispatch => {
+        dispatch(requestLogin(creds));
+
+        return fetch('/api/auth/create', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(creds)
+        })
+        .then(response => response.json().then(json => ({json, response})))
+        .then(({json, response}) => {
+            if(!response.ok) {
+                dispatch(failLogin(json.message));
+                return Promise.reject(json.message);
+            } else {
+                localStorage.setItem('token', json.token);
+                dispatch(receiveLogin(json.token, json.user));
+            }
+        }).catch(err => console.log(err));
     };
 }

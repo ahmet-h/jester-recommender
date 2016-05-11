@@ -145,7 +145,7 @@ class JokeController extends Controller
             return response(json_encode(['error' => $e]), 500);
         }
 
-        return response(json_encode(['rating' => $ratingValue]));
+        return response(['rating' => $ratingValue]);
     }
 
 }
