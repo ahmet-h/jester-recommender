@@ -17,9 +17,6 @@ class CreateJokesTable extends Migration
 
             $table->integer('no')->unique();
             $table->text('content');
-
-            $table->integer('num_ratings');
-            $table->double('avg_rating');
             
             $table->timestamps();
         });
